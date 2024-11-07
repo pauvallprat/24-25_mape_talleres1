@@ -1,0 +1,191 @@
+---
+title: "Entrega 1 - Talleres 1"
+author: "Vuestro/s Nombre/s"
+format: 
+  html: # Entrega en formato 
+    embed-resources: true # Para que el fichero html contenga toda la info
+editor: visual
+---
+
+```{r setup, include=FALSE}
+# Eliminar los objetos del ambiente de trabajo
+rm(list = ls())
+
+# Opciones para que aparezca la información relacionada con los chunks en el html
+knitr::opts_chunk$set(warning = FALSE, # En caso de mensajes de alerta
+                      message = FALSE, # Otro tipo de mensajes
+                      echo = TRUE, # Mostrar el código
+                      results = TRUE) # Mostrar los resultados del código
+
+# Añadir las librerías que se van a necesitar a lo largo del documento
+library()
+```
+
+# Primera entrega evaluable
+
+Elabora un documento, a poder ser un html con RMarkdown---alternativamente entregando un Word y un script de R---, donde muestres como has trabajado con la base de datos del [QoG](https://www.gu.se/en/quality-government/qog-data/data-downloads/standard-dataset) con información a nivel de país. Usa el link anterior para descargarte el libro de códigos aunque recuerda que los datos que vas a usar son una versión simplificada de la base de datos. Es importante entregar los detalles con todos los pasos seguidos para modificar la base de datos de acuerdo con lo requerido, incluye también una breve descripción de los resultados obtenidos. Para hacer este ejercicio es crucial trabajar con los paquetes de tidyverse y usar la pipa de R ( \|\> o %\>% ).
+
+## Ejercicio 1
+
+###### Carga la base de datos del QoG (se corresponde con la versión simple o Cross-section de los datos del QoG) que encontrarás en [la carpeta de GitHub con el nombre `qog_simple`](https://github.com/pauvallprat/24-25_mape_talleres1/tree/main/1_datos). Guárdala en la carpeta donde guardes las bases de datos de la asignatura y cárgala en el ambiente de R en un objeto que lleve el nombre `qog`.
+
+```{r cargar_datos}
+# Si los datos no están en la misma carpeta que el fichero Quarto, hay que especificar la ruta completa de la ubicación del archivo
+
+```
+
+## Ejercicio 2
+
+###### Indica las características principales de este objeto, qué información contiene la base de datos, cuantas observaciones y variables tiene.
+
+```{r }
+
+```
+
+
+## Ejercicio 3
+
+###### Crea dos objetos que contengan solo una parte de la información del objeto `qog`.
+
+###### a.  Un objeto con datos únicamente de los países europeos
+
+```{r Europa}
+
+```
+
+###### b.  Un objeto con datos de los países con una población superior a 100 millones de habitantes
+
+```{r big}
+
+```
+
+#### Ejercicio 4
+
+###### En este nuevo objeto con los países más poblados, elimina la variable de mortalidad infantil
+
+```{r elim_mort_inf}
+
+```
+
+## Ejercicio 5
+
+###### En el objeto con los países más poblados, elige cuatro de las variables que consideres más relevantes para analizar políticamente estos países
+
+```{r elegirvariables}
+
+```
+
+## Ejercicio 6
+
+###### Crea una variable dicotómica que distinga los países europeos entre los que tienen más de un 25% de escaños ocupados por diputados socialdemócratas y los que no. Haz una tabla simple para ver cuántos países cumplen con esta condición y cuáles no.
+
+```{r dicotomica}
+
+```
+
+## Ejercicio 7
+
+###### Calcula, en la base de datos global, el porcentaje de la población en cada país que es refugiada. (Recuerda que es importante que la escala de las variables sea la misma.)
+
+```{r refugiados}
+
+```
+
+## Ejercicio 8
+
+###### Ordena los países de menor a mayor porcentaje de mujeres en el parlamento. Muestra los países con menores porcentajes
+
+```{r arrange_women}
+
+```
+
+## Ejercicio 9
+
+###### Ordena de mayor a menor el porcentaje de población refugiada y rea un nuevo marco de datos con las variables del nombre del país y la variable de porcentaje de población refugiada. Indica los 5 países con mayor población refugiada en términos relativos.
+
+```{r arrange_refugees}
+
+```
+
+## Ejercicio 10
+
+###### Presenta la suma de casos de Covid en el mundo
+
+```{r covid}
+
+
+```
+
+## Ejercicio 11
+
+###### Indica la población mundial por continentes
+
+```{r summarize_continent}
+
+```
+
+## Ejercicio 12
+
+###### Indica el valor máximo en el número de ministros en el gabinete por regiones (`region1`).
+
+```{r max_minist_region}
+
+```
+
+## Ejercicio 13
+
+###### Presenta el valor de fragmentación étnica media por continentes
+
+```{r mean_eth_frag}
+
+```
+
+## Ejercicio 14
+
+###### La esperanza de vida, ¿es mayor en las democracias que en los países no democráticos? Justifica tu respuesta.
+
+```{r lifexp_democracy }
+
+```
+
+
+## Ejercicio 15
+
+###### Indica cuantos países tienen una letra K en su nombre
+
+```{r letraK}
+
+```
+
+## Ejercicio 16
+
+###### Crea una nueva variable que elimine el texto "(the)" al final del nombre de los países y muestra en una tabla las dos variables, la original y la nueva para estos países.
+
+```{r eliminar_the}
+
+```
+
+## Ejercicio 17
+
+###### Homogeneiza el estilo de texto en la variable `continent` para que el texto aparezca en mayúsculas y asegúrate que no hay espacios en blanco extra.
+
+```{r trim_continent}
+
+```
+
+## Ejercicio 18
+
+###### Convierte todos los espacios en la variable region1 en barras bajas (\_).
+
+```{r barra_baja}
+
+```
+
+## Ejercicio 19 (2 puntos)
+
+###### Piensa una información que puedas resumir a partir de los datos disponibles.
+
+
+```{r final}
+
+```
