@@ -1,0 +1,28 @@
+---
+title: "Talleres 1 - Sesión 2"
+author: "Estudiante"
+author-title: Autores
+published-title: Última modificación
+date: "`r Sys.Date()`"
+format: 
+  html:
+    embed-resources: true
+    code-fold: false
+    code-summary: "Mostrar código."
+    toc: true
+    toc-depth: 2
+    toc-title: Tabla de contenidos
+lang: es
+editor_options: 
+  chunk_output_type: console
+editor: source
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+library(pacman)
+# Añade aquí las librerías necesarias para realizar la actividad
+p_load()
+
+```
+
