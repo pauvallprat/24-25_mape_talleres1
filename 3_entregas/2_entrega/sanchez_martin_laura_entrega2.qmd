@@ -1,0 +1,446 @@
+---
+title: "Entrega 2 - Talleres 1"
+author: "Laura Sánchez Martín"
+format: html
+---
+
+```{r setup, include=FALSE}
+rm(list = ls())
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, echo = T,results=T)
+library(pacman)
+p_load(tidyverse,readxl,haven)
+```
+
+
+## Descripción
+
+*Elabora un documento html que incluya los chunks* de código empleado ---alternativamente entregando un Word y un script de R---, donde muestres como has trabajado con la base de datos del [QoG](https://www.gu.se/en/quality-government/qog-data/data-downloads/standard-dataset) con información a nivel de país. Usa el link anterior para descargarte el libro de códigos aunque recuerda que los datos que vas a usar son una versión simplificada de la base de datos. Es importante entregar los detalles con todos los pasos seguidos para modificar la base de datos de acuerdo con lo requerido. Para hacer este ejercicio es crucial trabajar con los paquetes de tidyverse y usar la pipa de R ( \|\> o %\>% ).
+
+#### Ejercicio 1 (1 punto)
+
+*Carga la base de datos del QoG simplificada que ya usamos en la Prueba 1. Cárgala en el ambiente de R en un objeto que lleve el nombre `qog`.*
+
+```{r}
+qog <- readRDS("0_datos/qog_simple.rds")
+```
+
+#### Ejercicio 2 (2 puntos)
+
+*Transforma las variables `continent`, `region1` y `bmr_dem` en variables de tipo factor. Define los valores y/o las etiquetas que quieras que aparezcan.*
+
+1.  Miraremos la clase de la variable
+
+```{r}
+class(qog$continent)
+
+class(qog$region1)
+
+class(qog$bmr_dem)
+```
+
+2.  Al ser las variables región1 y continent variables de tipo caracter no modificaremos sus etiquetas, ya que se entienden como estan. Al respecto de la variable bmr_dem, como es numérica, al convertirse a factor pondremos etiquetas nuevas.
+
+```{r}
+qog <- qog %>% 
+  mutate(across(c(continent, region1), as.factor), 
+         bmr_dem = factor(bmr_dem, levels = c(0, 1), labels = c("No democracia", "Democracia")))
+
+```
+
+3.  Comprobamos los resultados
+
+```{r}
+table(qog$continent)
+table(qog$region1)
+table(qog$bmr_dem)
+```
+
+#### Ejercicio 3 (2 puntos)
+
+*Crea un nuevo marco de datos donde estandarices las siguientes variables e indica si los países que se mencionan estan por encima o por debajo de la media.*
+
+```{r}
+qog_estan <- qog %>% 
+  mutate_at(c("wdi_unempedub","wgov_min"),scale)
+```
+
+*a. Paro (`wdi_unempedub`). Indica como se posicionan Francia y Uganda respecto a la media.*
+
+```{r}
+qog_estan %>% 
+  filter(cname == "France" | cname == "Uganda") %>% 
+  select(wdi_unempedub, cname) %>%
+  head()
+```
+
+Siendo la media 0 en el número de desempleados, vemos como Francia se encuentra 1.07 desviaciones estándar por encima de la media, mientras que Uganda se encuentra 0.78 desviaciones estándar por debajo.
+
+*b. Número de ministros (`wgov_min`). Indica como se posicionan España y Malasia respecto a la media.*
+
+```{r}
+qog_estan %>% 
+  filter(cname == "Spain" | cname == "Malaysia") %>% 
+  select(wgov_min, cname) %>%
+  head()
+```
+
+Siendo la media 0 en el número de desempleados, vemos como Francia se encuentra 1.07 desviaciones estándar por encima de la media, mientras que Uganda se encuentra 0.78 desviaciones estándar por debajo.
+
+*OTRA MANERA DE HACERLO (MAS CHULA)*
+
+```{r}
+
+qog_standardized <- qog %>%
+  mutate(
+    wdi_unempedub_std = scale(wdi_unempedub, center = TRUE, scale = TRUE),
+    wgov_min_std = scale(wgov_min, center = TRUE, scale = TRUE))
+
+
+francia_unempedub <- qog_standardized %>% filter(cname == "France") %>% pull(wdi_unempedub_std)
+uganda_unempedub <- qog_standardized %>% filter(cname == "Uganda") %>% pull(wdi_unempedub_std)
+
+francia_posicion <- ifelse(francia_unempedub > 0, "por encima de la media", "por debajo de la media")
+uganda_posicion <- ifelse(uganda_unempedub > 0, "por encima de la media", "por debajo de la media")
+
+cat("Francia está", francia_posicion, "en el porcentaje de desempleados con educación básica.\n")
+cat("Uganda está", uganda_posicion, "en el porcentaje de desempleados con educación básica.\n")
+```
+
+*b. Número de ministros (`wgov_min`). Indica como se posicionan España y Malasia respecto a la media.*
+
+```{r}
+
+espana_wgov_min <- qog_standardized %>% filter(cname == "Spain") %>% pull(wgov_min_std)
+malasia_wgov_min <- qog_standardized %>% filter(cname == "Malaysia") %>% pull(wgov_min_std)
+
+espana_posicion <- ifelse(espana_wgov_min > 0, "por encima de la media", "por debajo de la media")
+malasia_posicion <- ifelse(malasia_wgov_min > 0, "por encima de la media", "por debajo de la media")
+
+cat("España está", espana_posicion, "en el número de ministros.\n")
+cat("Malasia está", malasia_posicion, "en el número de ministros.\n")
+
+```
+
+#### Ejercicio 4 (2 puntos)
+
+*La variable `cpds_tg` es, de acuerdo con el libro de códigos, una variable categórica nominal. Sin embargo en el marco de datos `qog` que hemos cargado aparece como una variable numérica. Conviértela en factor, define las etiquetas si es necesario y aplica una función para reordenar los niveles de la variable para que se ordenen de mayor a menor.*
+
+1.  Al ser numérica, la convertimos a factor y le asginamos las etiquetas correspondientes. Una vez hecho, realizaremos un table para así ver la frecuencia de las categorías, para poder reordenar los niveles de la variable.
+
+```{r}
+qog <-  qog %>% 
+  mutate(cpds_tg = factor(cpds_tg,
+                          levels=c(1,2,3,4,5,6,7),
+                          labels=c("Gobierno mayoritario de partido único",
+                                   "Coalición mínima ganadora",
+                                   "Coalición sobredimensionada",
+                                   "Gobierno minoritario de partido único",
+                                   "Gobierno minoritario multipartidista",
+                                   "Gobierno provisional",
+                                   "Gobierno Tecnocrático")))
+      
+table(qog$cpds_tg)
+```
+
+2.  El orden es el siguiente:
+
+```         
+- Coalición mínima ganadora = 9
+- Gobierno mayoritario de partido único = 7
+- Gobierno minoritario multipartidista = 7
+- Coalición sobredimensionada = 6
+- Gobierno minoritario de partido único = 5
+- Gobierno provisional = 2
+- Gobierno Tecnocrático = 0
+```
+
+```{r}
+
+qog <-  qog %>% 
+  mutate(cpds_tg = fct_relevel(cpds_tg,
+                              c("Coalición mínima ganadora",
+                                "Gobierno mayoritario de partido único",
+                                "Gobierno minoritario multipartidista",
+                                "Coalición sobredimensionada",
+                                "Gobierno minoritario de partido único",
+                                "Gobierno provisional",
+                                "Gobierno Tecnocrático"))) %>% 
+  arrange(cpds_tg)
+
+table(qog$cpds_tg)
+
+```
+
+#### Ejercicio 5 (3 puntos)
+
+*El fichero `sistema_electoral.csv` nos da información del sistema electoral empleado para elegir a los miembros de cada cámara legislativa de todos los países. A nosotros, ahora mismo, solo nos interesa saber cuántas cámaras legislativas existen en cada país.*
+
+*a. Carga este fichero en el ambiente de R como un objeto llamado `siselec` y cambia la unidad de observación del marco de datos de país-cámara a país, conservando únicamente el número de cámaras legislativas de cada país (la nueva variable se podría llamar `numleg`).*
+
+1.  Cargaremos el fichero sobre sistemas electorales.
+
+```{r}
+siselec <- read.csv("0_datos/sistema_electoral.csv")
+```
+
+2.  Con la función group_by() agrupamos por un grupo concreto, en este caso, el país, cambiando así la unidad de observación del marco de datos. A continuación, con la función summarise() observamos cuántas cámaras legislativas hay en cada país, para ello le pedimos que la nueva variable numleg muestre cuantas veces aparece cada país en la base original.
+
+```{r}
+siselec <- siselec %>% 
+  group_by(Country) %>% 
+  summarise(numleg = n()) %>% 
+  rename(cname = Country)
+```
+
+*b. Combina el marco de datos `qog` con el marco de datos `siselec`, nos interesa conservar toda la información del `qog` y añadirle los datos de `siselec`. Recuerda que debes identificar una variable que sirva de clave y que permita identificar las observaciones que se refieren, en cada marco de datos, a la misma unidad. Guarda el resultado de unir ambos marcos de datos en un objeto llamado `qog_c`.*
+
+1.  Tenemos que homogeneizar el estilo de las variables, para ello, transformaremos los nombres de los países de la base qog y en siselec. Pero primero, para que la variable key tenga el mismo nombre en las dos bases de datos, lo cambiaremos en la base QoG.
+
+```{r}
+qog <- qog %>% 
+  mutate(cname = str_to_upper(cname),
+         cname = str_remove(cname, "\\(THE\\)$"),
+         cname = str_remove_all(cname, "[:blank:]"))
+
+siselec <- siselec %>% 
+  mutate(cname = str_remove_all(cname,  "[:blank:]"),
+         cname = str_remove_all(cname,  "[:blank:]")) 
+
+
+qog_c <- left_join(qog, siselec, by = "cname")
+
+table(qog_c$numleg, useNA = "ifany")
+
+dim(qog_c)
+```
+
+Tenemos 11 NA, que se deben a que algunos países tienen diferentes nombres, como en el caso de DEMOCRATICPEOPLE'SREPUBLICOFKOREA en siselec o KOREA(THEDEMOCRATICPEOPLE'SREPUBLICOF) en qog. Estos nombres no son tan sencillos de homogeneizar como los demás, debiéndose hacer a mano, lo he intentado, pero no me ha salido. Así que proseguiremos con 11 NAs.
+
+Vemos que al hacer el left_join tenemos 194 observaciones, como en el la base de datos mas grande, en este caso qog. Y, además, se añade una variable, que es la variable numleg, del dataset siselec.
+
+*c. Haz todas las combinaciones de uniones posibles (`right_join()`, `inner_join()`, `full_join()`) y guarda cada una de ellas en un objeto distinto. Explica brevemente por qué cambia el número de observaciones en cada una de ellas*
+
+```{r}
+qog_siselec_right <- right_join(qog, siselec, by = "cname")
+
+qog_siselec_inner <- inner_join(qog, siselec, by = "cname")
+
+qog_siselec_full <- full_join(qog, siselec, by = "cname")
+```
+
+Con el left_join teníamos 194 observaciones, pero al hacer right_join pasamos a tener 193, ya que unimos a siselec los datos de qog, y se conservan las observaciones de siselec.
+
+Con el inner_join vemos 183 observaciones, ya que se conservan aquellas que están de manera idéntica en ambas bases (países con el mismo nombre, ya que los paises son la variable clave). Al ser 11 los casos perdidos, tenemos 183 observaciones.
+
+Con el full_join obtenemos 204 observaciones, ya que se mantienen todas las observaciones, hasta aquellas que no coinciden en el nombre. Por ello, esos 11 paises que eran NAs y no coincidían, ahora se ven duplicados. Por ello de 194 pasaríamos a 205, pero se nos quedan en 204, ya que Taiwan solo esta en la base qog.
+
+#### Ejercicio 6 (2 puntos)
+
+*Combina la base de datos del QoG con los datos a nivel regional (NUTS) para los países europeos.*
+
+*a. Carga los datos y guárdalos en el ambiente con el nombre `nuts`.*
+
+```{r}
+nuts <- read_excel("0_datos/datos_nuts.xlsx")
+```
+
+*b. ¿Tiene más sentido emplear `left_join()` o `right_join()`?*
+
+1.  En primer lugar, para poder combinar las dos bases de datos tenemos que cambiar el nombre de la variable country a cname
+
+```{r}
+nuts <- nuts %>% 
+  rename(cname=country)
+```
+
+2.  En segundo lugar, homogeneizaremos los nombres en la base de datos nuts.
+
+```{r}
+nuts <- nuts %>%
+  mutate(cname = str_to_upper(cname),
+         cname= str_remove(cname, "\\(THE\\)$"),
+         cname= str_remove_all(cname, "[:blank:]"))
+```
+
+3.  En tercer lugar, realizaremos un right_join. De este modo, el nivel de observación serán los países, conservando los datos de qog y añadiendo a estos los datos regionales si hay coincidencias, duplicándose la fila del país tantas veces como municipios coincidan. Así tenemos los datos tanto nacionales como regionales.
+
+```{r}
+nuts_qog_right <- right_join(nuts, qog, by = "cname")
+```
+
+*c. Combina los marcos de datos `qog` y `nuts` de diferentes modos y comenta cuál es el nivel de observación en cada marco de datos resultante.*
+
+1.  La primera opción es realizar un left_join, priorizando los datos a nivel agregado.
+
+```{r}
+nust_qog_left <- left_join(nuts, qog, by= "cname")
+```
+
+Así combinamos las filas de dos tablas: - Conserva todas las filas de la tabla izquierda (nuts en este caso). - Agrega datos de la tabla derecha (qog) para las filas que tienen coincidencias en la clave especificada (cname).
+
+El nivel de observación será el de la tabla izquierda, es decir, municipios (de nuts).
+
+2.  Con esta segunda opción conservaríamos el máximo nivel de observaciones, pero con el nivel de observación de países.
+
+```{r}
+qog_nuts_left <- left_join(qog, nuts, by = "cname")
+```
+
+Así combinamos las filas de dos tablas: - Conserva todas las filas de la tabla izquierda (qog en este caso). - Agrega datos de la tabla derecha (nuts) para las filas que tienen coincidencias en la clave especificada (cname).
+
+El nivel de observación de la nueva tabla será el nivel de observación de qog. En este caso, qog tiene un nivel de observación de países, por lo que la tabla resultante (qog_nuts_left) también tendrá nivel de observación de países. Los datos de nuts se agregarán a esas filas donde cname coincida. Al haber múltiples filas en nuts con la misma clave (cname), esas filas se replican, cambiando efectivamente el nivel de observación a uno más granular.
+
+3.  La tercera opción puede ser un inner_join, donde se combinen las filas de las dos tablas en las cuales las claves coincidan en ambas tablas.
+
+```{r}
+nuts_qog_inner <- inner_join(nuts, qog, by = "cname")
+```
+
+Asi se combina las filas de las tablas donde las claves coinciden en ambas tablas. Es decir:
+
+-   Solo se incluirán las filas donde los valores de la columna cname están presentes tanto en nuts como en qog.
+-   Si una clave de cname está en una tabla pero no en la otra, esa fila será excluida del resultado.
+
+El nivel de observación en el resultado será el nivel más agregado entre ambas tablas. Dado que nuts tiene un nivel de observación de municipios (más agregado) y qog tiene un nivel de países (menos agregado), el resultado tendrá el nivel de observación de municipios.
+
+#### Ejercicio 7 (3 puntos)
+
+*Usa la base de datos del QoG en formato panel (país-año). Selecciona solo las observaciones desde el año 1980 y resume el valor de una variable, p.ej. mortalidad (`wdi_mortm`) o esperanza de vida (`wdi_lifexp`), por país y década. Luego, convierte estos valores en variables separadas, es decir crea una variable que sea Mortalidad80, otra que sea Mortalidad90, etc. (Pista, usa una función `pivot_`)*
+
+1.  Abrimos el fichero de datos.
+
+```{r}
+qog_panel <- read_dta("0_datos/qog_panel.dta") %>% 
+  filter(year>=1980)
+```
+
+2.  Una vez cargado el fichero, procederemos a seleccionar y recodificar las décadas que nos interesan
+
+```{r}
+
+qog_panel <- qog_panel %>%  
+  mutate(dec = case_when(
+    year >= 1980 & year < 1990 ~ "1980s",
+    year >= 1990 & year < 2000 ~ "1990s",
+    year >= 2000 & year < 2010 ~ "2000s",
+    year >= 2010 & year < 2020 ~ "2010s",
+    year >= 2020 ~ "2020s"))
+
+table(qog_panel$dec)
+
+```
+
+3.  Se indicarán el porcentaje de población que tiene acceso a la electricidad por país y década
+
+```{r}
+qog_panel_electr <- qog_panel %>%  
+  group_by(cname, dec) %>% 
+  summarize(mean_access_electr = mean(wdi_acel, na.rm = TRUE))
+```
+
+4.  Por último, realizaremos un pivot_wider para así convertir los valores que hemos obtenido en variables separadas.
+
+```{r}
+qog_panel_pivot <- qog_panel_electr %>%
+  pivot_wider(
+    names_from = dec,
+    names_prefix = "AccesoElectricidad",
+    values_from = mean_access_electr
+  )
+
+print(qog_panel_pivot)
+```
+
+#### Ejercicio 8 (2 puntos)
+
+*Haz un loop que te permita crear un objeto distinto con las observaciones de cada uno de los continentes por separado.*
+
+1.  Observamos los objetos
+
+```{r}
+qog_cont <- qog %>%
+  group_by(continent) %>%
+  summarise()
+
+```
+
+2.  De este modo extraemos una lista única de nombres de continentes de la columna continent, generando un vector.
+
+```{r}
+continentes <- unique(qog$continent)
+```
+
+3.  Ahora, realizamos el loop para crear un objeto distinto con las observaciones de cada uno de los continentes por separado, indicando que delante de cada objeto ponga qog\_
+
+```{r}
+for (i in continentes) {
+ assign(paste0("qog_", i), 
+        qog %>%  filter(continent == i))}
+
+```
+
+#### Ejercicio 9 (3 puntos)
+
+*Carga la base de datos del QoG en formato panel que podemos encontrar en la siguiente url (<https://www.qogdata.pol.gu.se/data/qog_std_ts_jan24_stata14.dta>).* *Es la misma información con la que trabajamos pero en formato panel. Selecciona solo las variables `cname`, `year`,`vdem_libdem` (indicador de democracia liberal), `icrg_qog` (indicador de calidad del gobierno), y todas las variables que empiecen por `ciri_`, correspondientes al proyecto CIRIGHTS que miden niveles en diferentes tipos de libertades.* *Para más información de las variables consulta el [libro de códigos](https://www.qogdata.pol.gu.se/data/codebook_std_jan24.pdf).*
+
+1.  Cargamos la base de datos y posteriormente mediante un select, seleccionamos las variables que nos interesan.
+
+```{r}
+panel_CIRIGHTS <- read_dta("0_datos/qog_std_ts_jan24_stata14.dta") %>% 
+select(cname, year, vdem_libdem, icrg_qog, starts_with("ciri_"))
+```
+
+*a. Filtra las observaciones desde el año 1980 que es cuando empieza el proyecto y rellena los valores perdidos en alguna de las variables anteriores; justifica la elección del método utilizado.*
+
+1.  El código producirá un conjunto de datos con las observaciones desde 1980, donde los valores faltantes de ciri_assn serán rellenados basándose en los valores disponibles dentro del mismo país. De este modo, rellenaré los valores perdidos con el último valor conocido dentro de cada país, con el down se rellenarán hacia abajo y con el up hacia arriba si fuese necesario. Si no hay datos disponibles para un país en todo el periodo, la variable permanecerá como NA, reflejando la ausencia de información.
+
+```{r}
+qog_assembly <- panel_CIRIGHTS %>% 
+  filter(year>=1980) %>% 
+  fill(ciri_assn, .direction = "down") %>%
+  fill(ciri_assn, .direction = "up")
+```
+
+2.  Verificamos si quedan NAs.
+
+```{r}
+remaining_missing <- sum(is.na(qog_assembly$ciri_assn))
+print(paste("Valores perdidos restantes en ciri_assn:", remaining_missing))
+```
+
+*b. Si quisieramos estimar el valor de `vdem_libdem` pero teniendo en cuenta la presencia de valores perdidos en los datos, explica los pasos que seguirías usando el paquete `mice`.*
+
+1.  Ahora, vemos los valores perdidos por país (esto no haría falta, pero lo dejo)
+
+```{r}
+
+missing_by_country <- panel_CIRIGHTS %>%
+  group_by(cname) %>%
+  summarize(missing_vdem = sum(is.na(vdem_libdem)))
+
+print(missing_by_country)
+
+```
+
+2.  Podría ser más preciso para realizar el mice añadir la variable icrg_qog, ya que indica la calidad del gobierno, pero utilizaré la variable ciri_wecon, la cual indica derechos económicos de las mujeres, entendiendo que los valores correlacionarán. En la función mice creamos 8 modelos, ya que mas imputaciones aumentan la precisión y elegiremos un número para la semilla.
+
+```{r}
+library(mice)
+mice_panel <- panel_CIRIGHTS %>% 
+  select(cname, year, vdem_libdem, ciri_wecon) %>% 
+  mice(m = 8, seed = 135)
+```
+
+3.  La función with nos permite ver cada modelo generado, la estimación para cada una de las bases de datos.
+
+```{r}
+with_panel <- with(mice_panel, lm(vdem_libdem ~ ciri_wecon))
+summary(with_panel)
+```
+
+4.  Mostramos el resultado con un resumen y, a través de pool, combinamos los resultados en todas las bases de datos
+
+```{r}
+resultado <- pool(with_panel)
+summary(resultado)
+```
