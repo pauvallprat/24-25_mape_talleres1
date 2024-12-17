@@ -94,22 +94,80 @@ elec <- elec19 %>%
 elec <- elec %>% 
   mutate(part = Votantes/Censo*100,
          PP_por = PP/Votantes*100,
-         paro_por = Paro/Pob.x*100,
-         univ_por = EstUniv/Pob.x*100)
-
-hist(elec$univ_por)
+         # Paro %
+         paro_por = Paro/`Pob.x`*100,
+         paro_f = if_else(paro_por>mean(paro_por,na.rm=T),1,0) %>% 
+           factor(labels = c("Bajo","Alto")),
+         # % Universitarios
+         univ_por = EstUniv/`Pob.x`*100,
+         # Viviendas turísticas
+         vtur_por = (VivFam-VivPrinc)/VivFam*100,
+         vtur_f = if_else(vtur_por>mean(vtur_por,na.rm=T),1,0) %>% 
+           factor(labels = c("No turístico","Turístico"))
+         )
 
 # Modelo bivariante
-m1 <- lm(data = elec,formula = PP_por ~ paro_por)
-
-summary(m1)
+m1 <- lm(formula = part ~ paro_f, data = elec %>% filter(year==2019))
 
 # Modelo multivariante
-m2 <- lm(data = elec,formula = PP_por ~ paro_por + univ_por)
+m2 <- lm(formula = part ~ paro_f + vtur_f, data = elec %>% filter(year==2019))
 
-summary(m2)
+m2b <- lm(formula = part ~ paro_por + vtur_por, data = elec %>% filter(year==2019))
 
+# Regresión con interacción (2 dicotómicas)
+m3 <- lm(part ~ paro_f*vtur_f, data = elec|> filter(year==2019))
+
+# Regresión con interacción (1 cuantitativa y 1 dicotómica)
+m4 <- lm(part ~ paro_por*vtur_f, data = elec|> filter(year==2019))
+
+# Regresión con interacción (2 cuantitativas)
+m5 <- lm(part ~ paro_por*vtur_por, data = elec|> filter(year==2019))
+
+
+# Mostrar resultados
+p_load(broom)
+
+tidy(m1)
+
+# Create regression tables for r1 to r5
+for (i in 1:5) {
+  r <- get(paste0("m", i))
+  tidy(r) |> print()
+}
+
+#### Stargazer ####
+p_load(stargazer)
+
+# Create table with stargazer
+stargazer(m1,m2,m2b,m3,m4,m5,type = "text",style = "apsr")
 
 # Efectos heterogéneos ----------------------------------------------------
+#  De forma gráfica
+p_load(marginaleffects)
+
+# Main effects, regresión bivariada
+plot_predictions(m1,condition = "paro_f")
+
+# Main effects, regresión múltiple
+plot_predictions(m2b,condition = "paro_por")
 
 
+# Interacciones, de dicotómicas
+plot_predictions(m3,condition = c("paro_f","vtur_f"))
+
+# Interacciones, 1 dicotómica y 1 cuanti
+plot_predictions(m4,condition = c("paro_por","vtur_f"))
+
+# Interacciones, 2 cuanti
+plot_predictions(m5,condition = c("paro_por","vtur_por"))
+
+
+### Efectos no lineales
+
+m6 <- lm(part ~ vtur_por + I(vtur_por^2),
+         data = elec %>% filter(year==2019))
+
+summary(m6)
+
+plot_predictions(m6,condition = "vtur_por")+
+  theme_minimal()
