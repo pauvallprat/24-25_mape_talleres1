@@ -91,4 +91,69 @@ elec <- elec19 %>%
 
 # Regresiones -------------------------------------------------------------
 
+# Modificamos la base de datos para tener nuevas variables
+elec <- elec %>% 
+  mutate(part = (Votantes/Censo)*100,
+         paro_por = (Paro/Censo)*100,
+         paro_f = if_else(paro_por<6.22,
+                          0,1) %>% factor(labels = c("Bajo","Alto")),
+         vtur_por = (VivFam-VivPrinc)/VivFam*100,
+         vtur_f = if_else(vtur_por>=66,1,0) %>%  
+           factor(labels = c("No turístico", "Turístico")))
 
+### Regresión 
+m1 <- lm(part~ vtur_f,data = elec|> filter(year==2019))
+
+m2 <- lm(part~ paro_por+ vtur_f ,data = elec|> filter(year==2019))
+
+# Regresión con interacción (2 dicotómicas)
+m3 <- lm(part ~ paro_f*vtur_f, data = elec|> filter(year==2019))
+
+# Regresión con interacción (1 numérica y 1 dicotómica)
+m4 <- lm(part ~ paro_por*vtur_f, data = elec|> filter(year==2019))
+
+# Regresión con interacció 2 continuas
+m5 <- lm(part ~ paro_por*vtur_por, data = elec|> filter(year==2019))
+
+
+p_load(broom)
+
+tidy(m2)
+glance(m2)
+
+#### Representación de valores predichos
+p_load(marginaleffects)
+
+tidy(m1)
+plot_predictions(m1,condition = "vtur_f")
+
+tidy(m2)
+plot_predictions(m2,condition = c("paro_por","vtur_f"))
+
+
+# 2 dicotómicas
+plot_predictions(m3,condition = c("vtur_f","paro_f"))+
+  theme_minimal()
+
+
+# Relación no lineal
+
+m7 <- lm(part ~ paro_por + I(paro_por^2),data = elec)
+tidy(m7)
+
+plot_predictions(m7,condition = "paro_por")
+
+
+# Estimación con efectos fijos
+p_load(estimatr)
+
+m8 <- lm_robust(part ~ paro_por,
+                fixed_effects = year,
+                data = elec)
+tidy(m8)
+
+m9 <- lm(part ~ paro_por,
+         data = elec)
+
+tidy(m9)
+tidy(m8)
