@@ -1,0 +1,376 @@
+---
+title: "Trabajo Final"
+author: "Raúl Martín San Miguel y Gonzalo Santano Rodríguez"
+format: html
+editor: visual
+---
+
+## Antes de comenzar
+
+Primero, es necesario cargar las librerías que vamos a necesitar durante el resto del trabajo. Para que el código pueda correr de manera fluida, hemos decidido cargar únicamente la librería pacman y gracias a la función `p_load` incluir el resto de librerías por si el/los correctores no tienen instalados los paquetes necesarios.
+
+```{r}
+library(pacman)
+p_load(tidyverse,
+       stargazer,
+       lm.beta,
+       jtools,
+       ggstance,
+       huxtable,
+       ggplot2,
+       interactions,
+       estimatr,
+       knitr,
+       kableExtra,
+       htmltools)
+```
+
+```{r}
+rm(list = ls()) # limpiar el environment
+```
+
+# Cargar datos
+
+Para poder comenzar con el análisis, es necesario cargar los datos. Utilizando los datos del Quality of Government Institute con el país como unidad de observación. También se cargan el resto de bases de datos a utilizar durante el trabajo.
+
+```{r}
+qog_cs <- read_csv("qog_std_cs_jan24.csv") 
+qog_ts <- read.csv("qog_std_ts_jan24.csv") |>
+  filter(year >= 1980)
+wvs <- read_csv("WVS_Cross-National_Wave_7_csv_v5_0.csv")
+```
+
+Habiendo revisado el libro de códigos, se han seleccionado las siguientes variables:
+
+```{r}
+qog_red <- qog_cs |> 
+  dplyr::select(bmr_dem, wdi_gdpcapcur, undp_hdi, van_part, ht_region, bmr_demdur, ccodecow, cname, pei_eir)
+```
+
+# Limpieza de variables
+
+Limpiar y recodificar la variable democracia
+
+```{r}
+qog_red <- qog_red |>
+  rename(democracia = bmr_dem) |>
+  mutate(democracia = factor(
+    democracia, 
+    levels = c(0, 1), 
+    labels = c("No democracia", "Democracia")))
+
+table(qog_red$democracia)
+```
+
+Limpiar y recodificar la variable región
+
+```{r}
+qog_red <- qog_red |>
+  rename(region = ht_region) |>
+  mutate(region = case_when(
+    region %in% c(5, 6) ~ 1, 
+    region %in% c(1, 2, 3, 7) ~ 2, 
+    region %in% c(4, 8, 9, 10) ~ 3), 
+    region = factor(
+      region, 
+      levels = c(1:3), 
+      labels = c("Economía desarrollada", "Economía emergente", "En desarrollo")))
+
+table(qog_red$region)
+```
+
+Cambiar el nombre de las siguientes variables, no es necesario limpiarlas ya que son continuas.
+
+```{r}
+qog_red <- qog_red |>
+  rename(pib = wdi_gdpcapcur, 
+         idh = undp_hdi, 
+         part_elec = van_part,
+         part_pol = vdem_partipdem, 
+         edad_regimen = bmr_demdur, 
+         integridad_electoral = pei_eir)
+```
+
+Seleccionamos las variables que nos interesan: percepción de integridad electoral y percepción de malas prácticas electorales.
+
+```{r}
+wvs_red <- wvs |>
+  dplyr::select(C_COW_NUM, Q224, Q225, Q226, Q227, Q228, Q229, Q230, Q231, Q232, Q233, Q252) 
+```
+
+Al estar codificadas de la misma manera, creamos un loop para limpiarlas a la vez.
+
+```{r}
+variables <- c("Q224", "Q225", "Q226", "Q227", "Q228", "Q229", "Q230", "Q231", "Q232", "Q233")
+
+
+for (col in variables) {
+  wvs_red[[col]][wvs[[col]] < 0] <- 0
+} 
+
+# como las variables están codificadas de la misma manera, creamos un loop para limpiarlas todas a la vez, le damos valor 0 a los casos perdidos para poder trabajar de una manera más cómoda con la variable luego 
+
+```
+
+La variable de satisfacción con la democracia la limpiamos a parte.
+
+```{r}
+wvs_red <- wvs_red |>
+  rename(satis_dem = Q252) |>
+  mutate(satis_dem = ifelse(satis_dem < 0, NA_real_, satis_dem))
+```
+
+```{r}
+wvs_red <- wvs_red |>
+  mutate(pei = ((Q224 + Q228 + Q229 + Q232 + Q233) / 5), 
+         pem = ((Q225 + Q226 + Q227 + Q230 + Q231) / 5), 
+         pei = 5 - pei, 
+         pem = 5 - pem) # damos la vuelta a los valores de la variable para que la interpretación no sea contraintuitiva
+```
+
+Seleccionamos las variables que nos interesan dentro del data frame.
+
+```{r}
+wvs_red <- wvs_red |>
+  dplyr::select(C_COW_NUM, satis_dem, pei, pem)
+```
+
+Al ser la unidad de observación el individuo y no el país, calculamos la media de las variables por país para que la unidad de observación sea la deseada y poder unirla a la base de datos original.
+
+```{r}
+wvs_pais <- wvs_red |>
+  group_by(C_COW_NUM) |>
+  summarise(across(everything(), ~ mean(.x, na.rm = TRUE)))
+```
+
+Renombramos la variable key para poder unir las dos bases de datos.
+
+```{r}
+wvs_pais <- wvs_pais |>
+  rename(ccodecow = C_COW_NUM)
+```
+
+# Creación de dos variables lag
+
+Seleccionamos las décadas que nos interesan:
+
+```{r}
+qog_ts <- qog_ts |>
+  mutate(decada = case_when(
+    year %in% c(1980:1990) ~ 1980,
+    year %in% c(1991:2000) ~ 1990,
+    year %in% c(2001:2010) ~ 2000,
+    year %in% c(2011:2020) ~ 2010,
+    year >= 2021 ~ 2020))
+```
+
+Creamos los datos para la década utilizando la media:
+
+```{r}
+qog_ts_part <- qog_ts |>
+  dplyr::group_by(decada, ccodecow) |>
+  dplyr::summarize(mean_part = mean(van_part, na.rm = TRUE))
+```
+
+Como faltan datos de participación, los vamos a imputar:
+
+```{r}
+qog_ts_part <- qog_ts_part |>
+  group_by(ccodecow) |>
+  fill(mean_part, .direction = "downup")
+```
+
+```{r}
+qog_ts_part_wider <- qog_ts_part |>
+  pivot_wider(names_from = decada, 
+              names_prefix = "Participación", 
+              values_from = mean_part)
+print(qog_ts_part_wider)
+```
+
+```{r}
+qog_ts_pib <- qog_ts |>
+  dplyr::group_by(decada, ccodecow) |>
+  dplyr::summarize(mean_pib = mean(wdi_gdpcapcur, na.rm = TRUE))
+```
+
+Imputamos, como antes, los datos que faltan del PIB.
+
+```{r}
+qog_ts_pib <- qog_ts_pib |>
+  group_by(ccodecow) |>
+  fill(mean_pib, .direction = "downup")
+```
+
+```{r}
+qog_ts_pib_wider <- qog_ts_pib |>
+  pivot_wider(names_from = decada, 
+              names_prefix = "PIB", 
+              values_from = mean_pib)
+print(qog_ts_pib_wider)
+```
+
+# Unificar bases de datos
+
+```{r}
+qog_join <- left_join(qog_red, qog_ts_part_wider, by = "ccodecow")
+```
+
+```{r}
+qog_join2 <- left_join(qog_join,  qog_ts_pib_wider, by = "ccodecow")
+```
+
+```{r}
+qog_join3 <- left_join(qog_join2, wvs_pais, by = "ccodecow")
+```
+
+Eliminamos los casos perdidos
+
+```{r}
+datos <- qog_join3 |>
+  drop_na()
+```
+
+# Modelos de regresión
+
+## Modelos para la hipótesis 1
+
+```{r}
+modelo1 <- lm(satis_dem ~ integridad_electoral, 
+              data = datos)
+
+beta1 <- lm.beta(modelo1) # calculamos también los beta para poder ver luego qué variable tiene un mayor impacto sobre la variable dependiente
+
+coef_estandarizados1 <- summary(beta1)$coefficients[, "Standardized"]
+```
+
+```{r}
+modelo2 <- lm(satis_dem ~ integridad_electoral + pei + pem, data = datos) 
+
+beta2 <- lm.beta(modelo2) 
+
+coef_estandarizados2 <- summary(beta2)$coefficients[, "Standardized"]
+```
+
+```{r}
+modelo3 <- lm(satis_dem ~ integridad_electoral + pei + pem + democracia + integridad_electoral*democracia + pei*democracia, data = datos) 
+
+beta3 <- lm.beta(modelo3) 
+
+coef_estandarizados3 <- summary(beta3)$coefficients[, "Standardized"]
+```
+
+```{r}
+modelo4 <- lm_robust(satis_dem ~ integridad_electoral + pei + pem + democracia + integridad_electoral*democracia + pei*democracia, fixed_effects = region, data = datos)  # añadimos fixed effects por región  
+```
+
+### Representación de modelos para la hipótesis 1:
+
+```{r}
+tabla1 <- export_summs(modelo1, modelo2, modelo3, modelo4,
+                       model.names = c("Modelo 1", "Modelo 2", "Modelo 3", "Modelo 4"),
+             coefs = c("Integridad electoral" = "integridad_electoral",
+                       "Percepciones de integridad electoral" = "pei",
+                       "Percepciones de malas prácticas electorales" = "pem",
+                       "Democracia" = "democraciaDemocracia",
+                       "Integridad electoral:Democracia" = "integridad_electoral:democraciaDemocracia",
+                       "Percepciones de integridad electoral:Democracia" = "pei:democraciaDemocracia",
+                       "Constante" = "(Intercept)"))
+
+tabla1 <- set_caption(tabla1, "Satisfacción con el funcionamiento del sistema")
+
+print(tabla1)
+```
+
+Sin embargo, para poder apreciar mejor qué variable tiene un mayor peso sobre la variable dependiente (explicar esto en términos sustantivos) es necesario calcular las betas: (ya están calculadas sólo hay que representarlas)
+
+```{r}
+stargazer(beta1, beta2, beta3, 
+          coef = list(coef_estandarizados1, 
+                      coef_estandarizados2,
+                      coef_estandarizados3), 
+          type = "text",
+          title = "Resultados con Coeficientes Estandarizados",
+          dep.var.labels = c("Satisfacción con el funcionamiento del sistema"),
+          covariate.labels = c("Integridad electoral",
+                               "Percepciones de integridad electoral", 
+                               "Percepciones de malas prácticas electorales", 
+                               "Democracia", 
+                               "Integridad electoral:Democracia", 
+                               "Percepciones de integridad electoral:Democracia", 
+                               "Constante"),
+          omit.stat = c("f", "ser"))
+```
+
+## Modelos para la hipótesis 2:
+
+```{r}
+modelo5 <- lm(part_elec ~ pei, data = datos)
+
+beta5 <- lm.beta(modelo5)
+
+coef_estandarizados5 <- summary(beta5)$coefficients[, "Standardized"]
+```
+
+```{r}
+modelo6 <- lm(part_elec ~ pei + pib + idh + region + democracia, data = datos)
+
+beta6 <- lm.beta(modelo6)
+
+coef_estandarizados6 <- summary(beta6)$coefficients[, "Standardized"]
+```
+
+### Representación de modelos para la hipótesis 2
+
+```{r}
+tabla2 <- export_summs(modelo5, modelo6,
+             model.names = c("Modelo 1", "Modelo 2"),
+             coefs = c("Percepciones de integridad electoral" = "pei",
+                               "PIB per cápita" = "pib", 
+                               "Índice de Desarrollo Humano" = "idh", 
+                               "Región económicamente emergente (cr: economía desarrollada)" = "regionEconomía emergente", 
+                               "Región económicamente en desarrollo (cr: economía desarrollada)" = "regionEn desarrollo", 
+                               "Democracia" = "democraciaDemocracia", 
+                               "Constante" = "(Intercept)"),            
+          out="models.txt")
+
+tabla2 <- set_caption(tabla2, "Participación electoral")
+
+print(tabla2)
+```
+
+```{r}
+stargazer(beta5, beta6, 
+          coef = list(coef_estandarizados5, 
+                      coef_estandarizados6), 
+          type = "text",
+          title = "Resultados con Coeficientes Estandarizados",
+          dep.var.labels = c("Participación en las urnas"),
+          covariate.labels = c("Percepciones de integridad electoral",
+                               "PIB per cápita", 
+                               "Índice de Desarrollo Humano", 
+                               "Región económicamente emergente (cr: economía desarrollada)", 
+                               "Región económicamente en desarrollo (cr: economía desarrollada)", 
+                               "Democracia", 
+                               "Constante"),
+          omit.stat = c("f", "ser"))
+```
+
+# Representación de la interacción
+
+```{r}
+interact_plot(modelo3, pred = pei, modx = democracia, 
+              main.title = "Interacción", 
+              y.label = "Satisfacción con el funcionamiento del sistema", 
+              x.label = "Percepciones de integridad electoral", 
+              legend.main = NULL) +  
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    plot.background = element_rect(fill = "white"),  
+    plot.margin = margin(10, 10, 10, 10), 
+    legend.title = element_blank(),
+  ) +
+  coord_fixed(ratio = 0.5) +  
+  scale_color_manual(values = c("No democracia"="#000080", "Democracia"="#6495ED"))
+
+```
