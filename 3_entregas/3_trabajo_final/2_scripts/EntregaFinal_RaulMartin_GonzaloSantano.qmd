@@ -1,0 +1,593 @@
+---
+title: " "
+output: html
+bibliography: Referencias_RaulMartin_GonzaloSantano.bib
+text: "Roboto"
+embed-resources: true
+toc: true
+toc-title: "Índice"
+---
+
+```{=html}
+<style>
+  .portada {
+    text-align: center;
+    margin-top: 100px;
+    padding: 50px;
+    border: 2px solid #000080;
+    background-color: #E6E6FA;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  .portada h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    color: #000080; 
+  }
+  .portada h2 {
+    font-size: 1.5em;
+    color: #000080;
+    margin-bottom: 40px;
+  }
+  .portada p {
+    font-size: 1.2em;
+    color: #000080;
+    margin: 5px 0;
+  }
+  .portada img {
+    width: 500px; 
+    height: auto;
+    margin-bottom: 20px; 
+  }
+</style>
+
+<div class="portada">
+  <img src="logo.png" alt="Logo">
+  <h1>La integridad electoral en disputa</h1>
+  <h2>(Des)conexión entre realidades y percepciones</h2>
+  <p><strong>Autores:</strong> Raúl Martín San Miguel y Gonzalo Santano Rodríguez</p>
+  <p><strong>Fecha:</strong> 16 de enero de 2025</p>
+  <br>
+  <p>Talleres de Análisis Político I</p>
+  <p><strong>Profesor:</strong> Pau Vall Prat</p>
+  <p>Máster en Análisis Político y Electoral</p>
+</div>
+```
+
+```{=html}
+<style>
+  body {
+    text-align: justify;
+  }
+</style>
+
+<style>
+  h1 {
+    color: #000080; 
+  }
+  h2 {
+    color: #000080; 
+  }
+  h3 {
+    color: #000080; 
+  }
+
+</style>
+```
+
+<br>
+
+<br>
+
+# Introducción
+
+Organizar elecciones es un requisito mínimo para que un país sea considerado democrático. Sin embargo, no es suficiente [@schedler2002]. Los procesos electorales son la base de las democracias modernas, y su integridad debería verse garantizada en todas las etapas del ciclo electoral. En la actualidad, la mayoría de los países eligen a sus líderes mediante elecciones [@vanham2014], lo que ha dado lugar a una conexión inherente entre los procesos electorales y las democracias. Estos procesos son extremadamente costosos en términos económicos, humanos y de tiempo, lo que exige que se realicen de forma eficiente, transparente y justa. A pesar de ello, en muchos casos no se cumple con este ideal, y a nivel global, los procesos electorales presentan bajos niveles de integridad electoral. Las malas prácticas electorales representan un desafío tanto para la integridad electoral como para la calidad de las democracias. Este déficit de integridad electoral tiene consecuencias graves para la salud de los regímenes democráticos y los sistemas políticos [@martinezicoma2016]. Cuando los ciudadanos no perciben las elecciones como libres y justas, su confianza en el sistema se debilita y sus actitudes políticas pueden verse afectadas.
+
+Aunque las consecuencias de estas malas prácticas y conductas electorales pueden variar, todas tienen un efecto común: debilitan la confianza de los ciudadanos en las instituciones políticas y reducen su satisfacción con la democracia. Los procesos electorales son mecanismos fundamentales de las democracias modernas, y la percepción de los ciudadanos sobre su integridad, ya sea acertada o no, resulta esencial para el buen funcionamiento del sistema [@cantú2015]. Por esta razón, mantener percepciones positivas y fundamentadas sobre la integridad del sistema electoral debería ser una prioridad gubernamental. Cuando los ciudadanos consideran que el proceso electoral es libre y justo, tienden a evaluar de manera más favorable la política y las instituciones democráticas en general ya que los procesos electorales otorgan a los ciudadanos una serie de oportunidades en términos de participación política que, de realizarse de manera correcta, puede fomentar el compromiso cívico de los ciudadanos [@martinezicoma2016]. En este contexto, surge la pregunta central del presente trabajo de investigación: ¿es mayor el impacto de las percepciones de los ciudadanos sobre la integridad electoral que la propia integridad de los procesos electorales? ¿influyen estas percepciones en la participación política?
+
+En un contexto de crisis y deslegitimación democrática como el actual, resulta esencial analizar el impacto de las percepciones de integridad electoral en las actitudes políticas de los ciudadanos. Los sistemas democráticos dependen de la transparencia y confianza en sus instituciones, y su fragilidad puede tener repercusiones graves en la legitimidad del sistema. Para explorar este fenómeno se utilizará, principalmente, la base de datos del Quality of Government Institute [@teorell2024], contando con el país como unidad de observación. Además, se utilizarán datos obtenidos de la base de datos del World Value Survey [@haerpfer2024] con el objetivo de poder llevar a cabo un análisis más completo. Sin embargo, este análisis ofrecerá un estudio superficial, limitado por las características de la muestra disponible, con tan solo 194 observaciones. A pesar de ello, esta investigación busca aportar una primera aproximación a las consecuencias de la falta de integridad electoral, identificando patrones y tendencias que permitan comprender su impacto. El objetivo principal es destacar cómo la debilidad en los procesos que sustentan las democracias modernas afecta la confianza ciudadana, la percepción de justicia en los sistemas políticos y, en última instancia, la satisfacción con la democracia misma.
+
+<br>
+
+# Marco teórico
+
+Algunos autores afirman que la celebración de elecciones justas se traduce en legitimidad del sistema [@banducci2003]. Sin embargo, otros autores aseguran que es la confianza de los electores en la integridad del proceso electoral la que condiciona la legitimidad del sistema a través de las actitudes políticas de los ciudadanos [@birch2008; @mauk2020]. Además, como señala Birch [-@birch2008], esta falta de confianza puede derivar en una crisis de legitimidad democrática. Siguiendo con esta línea de pensamiento, cuando los ciudadanos perciban una falta de integridad en el sistema electoral, su confianza en las instituciones así como su satisfacción con el funcionamiento del sistema político se verán reducidas [@norris2013; @mauk2020]. De esta manera, Birch [-@birch2010] concluye que los niveles de satisfacción con la democracia de un país dependen, en cierta medida, de la percepción ciudadana sobre la integridad de los procesos electorales. Así, si el funcionamiento de los regímenes políticos depende de las percepciones de los ciudadanos, estas opiniones pueden traducirse en una serie de implicaciones para los sistemas democráticos [@mauk2020]. 
+
+Por ello, la primera hipótesis de este estudio es la siguiente:
+
+::: {style="text-align: center;"}
+[**Hipótesis 1**]{style="color: #000080;"}\
+*Aquellos países con mejores percepciones sobre la integridad electoral tendrán mejores niveles de satisfacción con el funcionamiento del sistema político*
+
+[**Hipótesis 1a**]{style="color: #000080;"}\
+*Aquellos países con peores percepciones sobre la integridad electoral tendrán peores niveles de satisfacción con el funcionamiento del sistema político*
+
+[**Hipótesis 1b**]{style="color: #000080;"}\
+*El impacto de las percepciones de los ciudadanos en los niveles de satisfacción con el funcionamiento del sistema político será mayor que el impacto de la propia integridad electoral*
+:::
+
+<br>
+
+Por otra parte, aunque manteniendo el argumento teórico en este enfoque, son muchos los autores que asocian las percepciones sobre la integridad de los procesos electorales con la participación ciudadana en las urnas. Birch [-@birch2008] pone de manifiesto cómo las percepciones negativas de las elecciones se traducen en mayores niveles de abstencionismo electoral: cuando un posible votante percibe que las elecciones serán llevadas a cabo de una manera libre y justa su probabilidad de acudir a las urnas aumentará. Participar en un proceso que no se considera transparente o legítimo no resulta atractivo para los electores, por lo que terminarán por no aparecer en los colegios electorales. Además, Birch [-@birch2010] señala que esto tiene lugar en todo tipo de democracias, tanto en aquellas con un mayor recorrido democrático como en aquellas que están aún desarrollándose. Norris [-@norris2013] no duda en rebatir a la autora, y afirma que en aquellos sistemas democráticos más longevos el impacto de la percepción ciudadana sobre la honestidad democrática será menor que en aquellas democracias nuevas debido a la experiencia con la que cuentan. 
+
+Surgen así las siguientes dos hipótesis:
+
+::: {style="text-align: center;"}
+[**Hipótesis 2**]{style="color: #000080;"}\
+*Aquellos países con mejores niveles de percepción de integridad electoral contarán con mayores niveles de participación electoral*
+
+[**Hipótesis 3**]{style="color: #000080;"}\
+*El impacto de las percepciones de los ciudadanos tendrá un mayor impacto en países no democráticos*
+:::
+
+<br>
+
+# Datos y metodología
+
+Una vez elaboradas las hipótesis, se puede proceder a presentar los datos y la metodología que se emplearán para corroborar las mismas. Para llevar a cabo el análisis se combinarán dos conjuntos de datos, por un lado, la base de “The QOG Standard Dataset 2024” elaborado por The Quality of Government Institute [@teorell2024], centrado en investigar cómo la calidad de las instituciones gubernamentales impacta en el bienestar humano y el desarrollo social. Y, por el otro lado, la “World Values Survey Wave 7”, [@haerpfer2024] realizada entre los años 2017 y 2022, que tiene como objetivo explorar y analizar las creencias, valores y actitudes culturales y políticas de las personas en todo el mundo. Posteriormente se explicará el procedimiento que se ha seguido para unir ambas bases, pero antes serán detalladas las características de las principales variables empleadas a lo largo del estudio. De ahora en adelante, nos refereriremos a estas bases de datos como "QoG" y "WVS" respectivamente.
+
+La primera de las hipótesis planteadas se centraba en el impacto de la integridad del sistema electoral y las percepciones de este sobre la satisfacción con el funcionamiento del sistema político. La variable dependiente (*Q252*) en este caso es fácil de identificar y se encuentra claramente operacionalizada en la WVS en forma de escala 1-10, donde 1 representa la mayor insatisfacción con el funcionamiento del sistema político y 10 la máxima satisfacción. La única transformación que se ha tenido que ejecutar en este caso, aparte del cambio de nombre (*satis_dem*) es la de enviar los valores negativos (categorías de no respuesta) a pérdidos, facilitando así el análisis posterior.
+
+```{r, include = FALSE}
+library(pacman)
+p_load(tidyverse,
+       stargazer,
+       lm.beta,
+       jtools,
+       ggstance,
+       huxtable,
+       ggplot2,
+       interactions,
+       estimatr,
+       knitr,
+       kableExtra,
+       htmltools)
+```
+
+```{r, include = FALSE}
+qog_cs <- read_csv("qog_std_cs_jan24.csv") 
+```
+
+```{r, include = FALSE}
+qog_red <- qog_cs |> dplyr::select(bmr_dem, wdi_gdpcapcur, undp_hdi, van_part, vdem_partipdem, ht_region, bmr_demdur, ccodecow, cname, pei_eir)
+```
+
+```{r, include = FALSE}
+qog_red <- qog_red |>
+  rename(democracia = bmr_dem) |>
+  mutate(democracia = factor(
+    democracia, 
+    levels = c(0, 1), 
+    labels = c("No democracia", "Democracia")))
+```
+
+```{r, include = FALSE}
+qog_red <- qog_red |>
+  rename(pib = wdi_gdpcapcur, 
+         idh = undp_hdi, 
+         part_elec = van_part,
+         edad_regimen = bmr_demdur, 
+         integridad_electoral = pei_eir)
+```
+
+```{r, include = FALSE}
+wvs <- read_csv("WVS_Cross-National_Wave_7_csv_v5_0.csv")
+```
+
+```{r, include = FALSE}
+wvs_red <- wvs |>
+  dplyr::select(C_COW_NUM, Q224, Q225, Q226, Q227, Q228, Q229, Q230, Q231, Q232, Q233, Q252) 
+```
+
+```{r, include = FALSE}
+wvs_red <- wvs_red |>
+  rename(satis_dem = Q252) |>
+  mutate(satis_dem = ifelse(satis_dem < 0, NA_real_, satis_dem))
+```
+
+En relación con esta primera hipótesis una de las principales variables independientes que se contemplaba era la integridad electoral existente en cada país. En este caso, encontramos la variable recogida en la base de datos de QOG (*pei_eir*), y, de nuevo, está operacionalizada en una escala del 1 al 10, en la cual el 1 indica una integridad electoral muy pobre y el 10 plena integridad. Además, cabe destacar que esta variable se crea a partir de la valoración que hacen expertos de la calidad de las elecciones en diferentes países del mundo. Por tanto, esta es una buena forma de comparar procesos electorales a través de opiniones fiables e independientes. En este caso no ha sido necesario realizar ninguna modificación de los datos más alla de cambiarle el nombre a la variable (*integridad_electoral*).
+
+La otra parte fundamental de la primera hipótesis no tenía tanto que ver con la realidad electoral de los diferentes países, sino que estaba relacionada con la percepción de los ciudadanos sobre la integridad de los procesos electorales. Para estudiar estas cuestiones se volverá a hacer uso de la WVS, dentro de la cual se han seleccionado un total de diez variables para estudiar la visión de los ciudadanos (*Q224:Q233*). Estas se dividirán en dos grupos con el objetivo de crear dos variables diferentes. Por un lado, cinco de las variables serán utilizadas para generar una nueva que mida lo que se ha denominado como la percepción de la integridad electoral en sí (*pei*). Los cinco indicadores empleados se dedican a capturar cuestiones como si los ciudadanos creen que el conteo de votos es justo, los funcionarios electorales son imparciales, hay libertad real para elegir entre diferentes opciones, es decir, hasta qué punto el proceso electoral en general es veraz. 
+
+Por otro lado, las otras cinco variables se utilizarán para averiguar si existe una percepción de malas prácticas en la propia votación (*pem*). En este caso, se atenderá más a qué creen los ciudadanos que ocurre el propio día de las elecciones, y si consideran que hay votantes que acuden a las urnas sobornados, amenazados o si hay injerencias por parte de las personas con más dinero. 
+
+Habiendo comprendido cómo se agruparán los diferentes indicadores para medir la percepción de los ciudadanos, se puede explicar las transformaciones que se han llevado a cabo. En primer lugar, al estar todas las variables igualmente codificadas por la WVS, se ha hecho un loop para agilizar el trabajo y mandar los valores de las categorías de no respuesta a perdidos. Una vez hecho esto, para generar las nuevas variables se ha sumado el valor de los indicadores que les han sido atribuidos previamente y se ha dividido entre cinco. De esta forma, obtenemos una variable de percepción de integridad electoral (pei) y otra de percepción de malas prácticas (pem) que derivan de una media de los cinco indicadores que miden cuestiones similares. El resultado es que se generan variables de tipo contínuo, como ya eran las originales, en el que se encuentran escalas del 1 al 4 donde los valores más bajos indican menos integridad electoral o mayor número de malas práctica, y lo más altos a la inversa. Se ha decidido invertir estas escalas para que las interpretaciones posteriores no sean contraintuitivas.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Limpieza de variables sobre percepciones"
+#| code-line-numbers: true
+variables <- c("Q224", "Q225", "Q226", "Q227", "Q228", "Q229", "Q230", "Q231", "Q232", "Q233")
+
+
+for (col in variables) {
+  wvs_red[[col]][wvs[[col]] < 0] <- 0
+} 
+```
+
+```{r}
+#| code-fold: true
+#| code-summary: "Recodificación de las variables sobre percepciones"
+#| code-line-numbers: true
+wvs_red <- wvs_red |>
+  mutate(pei = ((Q224 + Q228 + Q229 + Q232 + Q233) / 5), 
+         pem = ((Q225 + Q226 + Q227 + Q230 + Q231) / 5), 
+         pei = 5 - pei, 
+         pem = 5 - pem)
+```
+
+```{r, include = FALSE}
+wvs_red <- wvs_red |>
+  dplyr::select(C_COW_NUM, satis_dem, pei, pem)
+```
+
+Pasando ya a la segunda hipótesis, centrada en observar el impacto de las percepciones de la integridad electoral sobre la participación, hay algunas cuestiones que han de ser explicadas. La variable dependiente pasa a centrarse en cuánto acuden los ciudadanos a las urnas, dato que se encuentra de manera sencilla en la base de datos de QOG. Gracias a la variable van_part contamos con el porcentaje de participación en las elecciones de los diferentes países. Al igual que ocurría anteriormente, no ha sido necesario ejecutar ningún cambio dentro de la variable. Además, en esta segunda hipótesis, la principal variable independiente es la percepción de las personas sobre la integridad electoral (pei), sobre la cual ya se ha explicado su proceso de transformación y creación. 
+
+El siguiente paso, una vez conocidas las variables dependientes e independientes de las dos hipótesis, es el momento de examinar las variables de control. Uno de los factores que se utilizará para controlar la relación en las dos hipótesis propuestas es el hecho de si el país estudiado es o no una democracia. Introducir una variable así es de gran importancia ya que QOG cuenta con información de países de todo el mundo, no solo de los sistemas democráticos, y teniendo en cuenta que se están estudiando cuestiones de satisfacción con el funcionamiento de los sistemas políticos, esto es algo que no se puede obviar. Dentro del propio QOG se encuentra una variable de tipo binario que indica si el país es democracia o no, la única modificación que se tiene que realizar en este caso es la de convertir la variable en un factor, facilitando así su inclusión en los modelos de regresión. 
+
+Además, dada la variedad de países que se ha mencionado también es importante categorizar estos en función de algunos rasgos básicos, por ejemplo, el nivel de desarrollo de cada uno. A partir de una variable de QOG (ht_region) que agrupa los países en función de su proximidad geográfica, se ha buscado ir más allá y diferenciar estos en función del nivel de desarrollo económico. Esto se fundamenta en los hallazgos de [@norris2019], que concluyeron que en aquellos países del norte global (es decir, países desarrollados), los niveles de integridad electoral son mayores que los países del sur global (países en desarrollo y países emergentes). Sin duda, esta es una decisión a la que se le podrían matizar muchas cuestiones, pero a modo de resumen puede ser de gran utilidad para observar los resultados que puede ocasionar pertenecer a un grupo de países u otro. Para generar esta nueva variable simplemente se han agrupado las categorías recogidas en QOG en tres niveles: economía desarrollada, economía emergente y economía en desarrollo.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Recodificar la variable región"
+#| code-line-numbers: true
+qog_red <- qog_red |>
+  rename(region = ht_region) |>
+  mutate(region = case_when(
+    region %in% c(5, 6) ~ 1, 
+    region %in% c(1, 2, 3, 7) ~ 2, 
+    region %in% c(4, 8, 9, 10) ~ 3), 
+    region = factor(
+      region, 
+      levels = c(1:3), 
+      labels = c("Economía desarrollada", "Economía emergente", "En desarrollo")))
+```
+
+Para terminar con el grupo de variables de control se usará también el PIB per cápita de los diferentes países. Este también se encuentra recogido de varias maneras dentro de QOG, pero se ha decidido emplear la variable wdi_gdpcapcur, que recoge el PIB per cápita a partir de la división del producto total de bienes y servicios de un país entre su población, expresado en dólares actuales. Es una buena medida porque permite comparar el nivel promedio de riqueza o desarrollo económico entre países de manera sencilla. Es una variable de tipo contínuo sobre la que no se ha hecho ningún cambio. La última de las variables introducidas ha sido el Índice de Desarrollo Humano, también perteneciente a QOG y centrado en destacar que el desarrollo de un país debe medirse considerando las capacidades y el bienestar de las personas, no solo su crecimiento económico. Al igual que la anterior, esta variable contínua no ha sido transformada y toma valores entre 0 y 1, cuanto más próximo sea el valor al 1 significa que mejor lo está haciendo el país en cuestión.
+
+Antes de explicar los modelos especificados, se ha hecho referencia a lo largo de esta sección a que se han utilizado variables procedentes de bases de datos diferentes, por lo que también es importante tener en cuenta cómo se han unido estas. En primer lugar, y antes de combinar ningún dato, es importante señalar que las variables procedentes de la WVS tienen como unidad de observación al individuo, no al país. En este caso, como nuestra base principal es QOG, nos interesa que la unidad de observación sí que la constituya el país, por ello, se ha tomado la decisión de que en las variables de WVS se realice la media de cada variable por país. Pese a que pueda generar algunas limitaciones, que serán tenidas en cuenta posteriormente, es una forma correcta de poder continuar con el análisis propuesto.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Calcular la media para cada país"
+#| code-line-numbers: true
+wvs_pais <- wvs_red |>
+  group_by(C_COW_NUM) |>
+  summarise(across(everything(), ~ mean(.x, na.rm = TRUE)))
+```
+
+```{r, include = FALSE}
+wvs_pais <- wvs_pais |>
+  rename(ccodecow = C_COW_NUM)
+```
+
+El siguiente paso entonces sí que es el de unir las dos bases de datos. Primero, hay que identificar una variable clave que se encuentre en los dos conjuntos de datos. Esta tarea ha sido sencilla de llevar a cabo, tanto QOG como WVS utilizan el estándar ISO-3166-1 para identificar a los países, por lo que la única tarea ha sido modificar el nombre de la variable del código de cada país dentro de WVS para que coincida con el de QOG. Una vez identificado el nexo entre ambas bases se puede pasar a unirlas. Lo que más conviene utilizar en este caso es un left_join, el objetivo es que QOG sea la base de datos principal, por lo que se busca mantener tanto el número de observaciones como la unidad de observación y simplemente añadir las variables de las otras bases, en este caso WVS y las variables procedentes del propio panel de QOG. Al unificar las bases de datos, la muestra se limita a tan sólo 49 observaciones. Siendo conscientes de la limitación que esto supone, procedemos a continuar con el análisis.
+
+```{r, include = FALSE}
+qog_ts <- read.csv("qog_std_ts_jan24.csv") |>
+  filter(year >= 1980)
+```
+
+```{r, include = FALSE}
+qog_ts <- qog_ts |>
+  mutate(decada = case_when(
+    year %in% c(1980:1990) ~ 1980,
+    year %in% c(1991:2000) ~ 1990,
+    year %in% c(2001:2010) ~ 2000,
+    year %in% c(2011:2020) ~ 2010,
+    year >= 2021 ~ 2020))
+```
+
+```{r, include = FALSE}
+qog_ts_part <- qog_ts |>
+  dplyr::group_by(decada, ccodecow) |>
+  dplyr::summarize(mean_part = mean(van_part, na.rm = TRUE))
+```
+
+```{r, include = FALSE}
+qog_ts_part <- qog_ts_part |>
+  group_by(ccodecow) |>
+  fill(mean_part, .direction = "downup")
+```
+
+```{r, include = FALSE}
+qog_ts_part_wider <- qog_ts_part |>
+  pivot_wider(names_from = decada, 
+              names_prefix = "Participación", 
+              values_from = mean_part)
+print(qog_ts_part_wider)
+```
+
+```{r, include = FALSE}
+qog_ts_pib <- qog_ts |>
+  dplyr::group_by(decada, ccodecow) |>
+  dplyr::summarize(mean_pib = mean(wdi_gdpcapcur, na.rm = TRUE))
+```
+
+```{r, include = FALSE}
+qog_ts_pib <- qog_ts_pib |>
+  group_by(ccodecow) |>
+  fill(mean_pib, .direction = "downup")
+```
+
+```{r, include = FALSE}
+qog_ts_pib_wider <- qog_ts_pib |>
+  pivot_wider(names_from = decada, 
+              names_prefix = "PIB", 
+              values_from = mean_pib)
+print(qog_ts_pib_wider)
+```
+
+```{r, include = FALSE}
+qog_join <- left_join(qog_red, qog_ts_part_wider, by = "ccodecow")
+qog_join2 <- left_join(qog_join,  qog_ts_pib_wider, by = "ccodecow")
+```
+
+```{r}
+#| code-fold: true
+#| code-summary: "Unificar las bases de datos"
+#| code-line-numbers: true
+qog_join3 <- left_join(qog_join2, wvs_pais, by = "ccodecow")
+datos <- qog_join3 |>
+  drop_na()
+```
+
+En este punto, se pueden explicar los modelos especificados con los que se intentarán contrastar las hipótesis propuestas. Dada la naturaleza contínua de las variables dependientes propuestas no hay ninguna duda de que se llevarán a cabo regresiones lineales, ya que el método OLS es el idóneo para este tipo de variables. Con el objetivo de validar la primera de las hipótesis, que tiene como variable dependiente la satisfacción con el funcionamiento del sistema político, se propondrán cuatro modelos diferentes. El primero de ellos consistirá en una regresión simple que tenga como variable independiente la integridad electoral “real”, es decir, la indicada por los expertos. El segundo modelo, y para poder afirmar qué tiene más efecto sobre la satisfacción ciudadana, se introducirán tanto las percepciones de integridad electoral como las percepciones sobre las malas prácticas. El tercero de los modelos introducirá como control la variable dicotómica de ser o no una democracia, y a su vez esta se usará para interaccionar con la variable de integridad electoral real y de percepción. Esta será una forma efectiva de ver cómo influye el contexto institucional y analizar cómo varían las expectativas de las personas en función de si viven en una democracia o no. Por último, se especificará un cuarto modelo que añade efectos fijos en función de la región,  reduciendo así el riesgo de que los resultados estén sesgados por diferencias sistemáticas entre regiones.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Modelo 1"
+#| code-line-numbers: true
+modelo1 <- lm(satis_dem ~ integridad_electoral, 
+              data = datos)
+
+beta1 <- lm.beta(modelo1) # calculamos también los beta para poder ver luego qué variable tiene un mayor impacto sobre la variable dependiente
+
+coef_estandarizados1 <- summary(beta1)$coefficients[, "Standardized"]
+```
+
+```{r}
+#| code-fold: true
+#| code-summary: "Modelo 2"
+#| code-line-numbers: true
+modelo2 <- lm(satis_dem ~ integridad_electoral + pei + pem, data = datos) 
+
+beta2 <- lm.beta(modelo2) 
+
+coef_estandarizados2 <- summary(beta2)$coefficients[, "Standardized"]
+```
+
+```{r}
+#| code-fold: true
+#| code-summary: "Modelo 3"
+#| code-line-numbers: true
+modelo3 <- lm(satis_dem ~ integridad_electoral + pei + pem + democracia + integridad_electoral*democracia + pei*democracia, data = datos) 
+
+beta3 <- lm.beta(modelo3) 
+
+coef_estandarizados3 <- summary(beta3)$coefficients[, "Standardized"]
+```
+
+```{r}
+#| code-fold: true
+#| code-summary: "Modelo 4"
+#| code-line-numbers: true
+modelo4 <- lm_robust(satis_dem ~ integridad_electoral + pei + pem + democracia + integridad_electoral*democracia + pei*democracia, fixed_effects = region, data = datos)  # añadimos fixed effects por región 
+```
+
+Así, la ecuación del modelo más completo se vería así:
+
+\begin{aligned}
+\text{Satisfacción con el sistema}_i &= \beta_0 \\
+ \beta_1 \, \text{Integridad electoral}_i &+\\
+ \beta_2 \, \text{Percepción integridad electoral}_i &+\\
+ \beta_3 \, \text{Percepción malas prácticas}_i &+\\
+ \beta_4 \, \text{Democracia}_i &+\\
+ \beta_5 \, (\text{Integridad electoral}_i \times \text{Democracia}_i) &+\\
+ \beta_6 \, (\text{Percepción integridad electoral}_i \times \text{Democracia}_i) &+\\
+ \gamma \, z_i + \epsilon_i
+\end{aligned}
+
+Para la segunda de las hipótesis se reduce a tan solo dos modelos. De nuevo, al ser la variable dependiente el porcentaje de participación se utilizarán regresiones lineales. El primer modelo será de nuevo una regresión lineal simple que introduzca como variable explicativa la percepción sobre la integridad electoral ya utilizada anteriormente. En el segundo modelo se introducirán una serie de variables de control entre las que se encuentran el PIB per cápita, el Índice de Desarrollo Humano, la región y el hecho de que el país en cuestión sea una democracia o no lo sea. 
+
+```{r}
+#| code-fold: true
+#| code-summary: "Modelo 5"
+#| code-line-numbers: true
+modelo5 <- lm(part_elec ~ pei, data = datos)
+
+beta5 <- lm.beta(modelo5)
+
+coef_estandarizados5 <- summary(beta5)$coefficients[, "Standardized"]
+```
+
+```{r}
+#| code-fold: true
+#| code-summary: "Modelo 6"
+#| code-line-numbers: true
+modelo6 <- lm(part_elec ~ pei + pib + idh + region + democracia, data = datos)
+
+beta6 <- lm.beta(modelo6)
+
+coef_estandarizados6 <- summary(beta6)$coefficients[, "Standardized"]
+```
+
+De esta manera, la ecuación del modelo más completo se vería así:
+
+\begin{aligned}
+\text{Participación electoral}_i &= \beta_0 \\
+ \beta_1 \, \text{Percepción integridad electoral}_i &+\\
+ \beta_2 \, \text{PIB}_i &+\\
+ \beta_3 \, \text{Región}_i &+\\
+ \beta_4 \, \text{Democracia}_i &+\\
+ \beta_5 \, (\text{Integridad electoral}_i \times \text{Democracia}_i) &+\\
+ \beta_6 \, (\text{Percepción integridad electoral}_i \times \text{Democracia}_i) &+\\
+ \gamma \, z_i + \epsilon_i
+\end{aligned}
+
+<br>
+
+Además, antes de pasar al análisis de resultados, se va a mostrar una tabla a modo resumen con información descriptiva de las variables principales del estudio.
+
+```{r, echo = FALSE}
+summary_table <- data.frame(
+  Variable = c("Satisfacción con el funcionamiento del sistema", "Integridad electoral", "Percepciones de integridad electoral", "Percepciones de malas prácticas electorales"),
+  Min = c(min(datos$satis_dem), min(datos$integridad_electoral), min(datos$pei), max(datos$pem)),
+  Median = c(median(datos$satis_dem), median(datos$integridad_electoral), median(datos$pei), median(datos$pem)),
+  Mean = c(mean(datos$satis_dem), mean(datos$integridad_electoral), mean(datos$pei), mean(datos$pem)),
+  Max = c(max(datos$satis_dem), max(datos$integridad_electoral), max(datos$pei), max(datos$pem))
+)
+
+
+kable(summary_table, format = "html", caption = "<span style='color:#000080;'>Estadísticos descriptivos de las principales variables</span>") %>%
+  kable_styling(
+    bootstrap_options = "striped",
+    full_width = FALSE
+  ) %>%
+  row_spec(0, bold = TRUE, color = "#000080") %>% # Encabezado con texto azul oscuro
+  column_spec(1:5, color = "black") %>% # Cambiar color del texto en todas las columnas a negro
+  row_spec(1, background = "#E6E6FA") %>% # Fila 1 con fondo lavanda
+  row_spec(3, background = "#E6E6FA")    # Fila 3 con fondo lavanda
+
+```
+
+<br>
+
+# Análisis de resultados
+
+Una vez especificados los modelos y habiendo mostrado los estadísticos descriptivos básicos de las variables introducidas, se puede pasar a realizar la interpretación de los diferentes resultados. Para obtener una imagen más completa se han representado tanto los coeficientes no estandarizados como los estandarizados, lo que nos permitirá comparar el efecto de las variables que se miden en diferentes escalas. Aun así, la interpretación principal se realizará sobre la tabla que se muestra a continuación, en la que se pueden observar los cuatro modelos realizados para examinar cómo varía la satisfacción con el funcionamiento del sistema político.
+
+```{r, echo = FALSE}
+tabla1 <- export_summs(modelo1, modelo2, modelo3, modelo4,
+                       model.names = c("Modelo 1", "Modelo 2", "Modelo 3", "Modelo 4"),
+             coefs = c("Integridad electoral" = "integridad_electoral",
+                       "Percepciones de integridad electoral" = "pei",
+                       "Percepciones de malas prácticas electorales" = "pem",
+                       "Democracia" = "democraciaDemocracia",
+                       "Integridad electoral:Democracia" = "integridad_electoral:democraciaDemocracia",
+                       "Percepciones de integridad electoral:Democracia" = "pei:democraciaDemocracia",
+                       "Constante" = "(Intercept)"))
+
+tabla1 <- set_caption(tabla1, "Satisfacción con el funcionamiento del sistema")
+
+print(tabla1)
+```
+
+<br>
+
+Prestando atención directamente al modelo más completo (Modelo 4) se puede ir anticipando que las percepciones de las personas sobre la integridad electoral tienen un efecto estadísticamente significativo sobre la satisfacción con el funcionamiento de los sistemas políticos. De forma concreta, por cada unidad que aumenta la percepción positiva de integridad electoral (en una escala de 1 a 4), la satisfacción con el sistema político aumenta en 2.43 puntos (p\<0.001) en una escala de 1 a 10. De manera similar, las percepciones de malas prácticas electorales tienen un efecto negativo y significativo, donde cada unidad que aumenta la percepción de malas prácticas está asociada con una disminución de 1.69 puntos en la satisfacción política, de nuevo con un nivel de confianza del 99,9%. Estos primeros resultados muestran una evidencia sólida para poder validar tanto H1, que afirmaba que una mejor percepción de integridad electoral estaría asociada con una mayor satisfacción con cómo funciona el sistema, como H1a, que de forma similar consideraba que cuanto menor peor fuera la percepción de integridad electoral menor sería la satisfacción política.
+
+Además, la tercera de las hipótesis planteadas también parece encontrar el respaldo suficiente para ser aceptada. Tal y como vemos, integridad electoral "objetiva" no muestra un efecto significativo en el modelo final, lo que sugiere un mayor impacto de las percepciones ciudadanas en comparación con las medidas de los expertos de integridad electoral. También es reseñable qué ocurre al hacer la interacción entre variables, y es que al introducir el tipo de régimen podemos concluir que, pese a no ser una relación significativa, en democracias, el efecto de las percepciones de integridad electoral es algo menor (2.43 - 0.90 = 1.53 puntos) que en regímenes no democráticos (2.43 puntos). Por último, es destacable que el modelo final explica un 61% de la varianza de la variable dependiente, remarcando así la importancia de tener en cuenta las percepciones y no solo la "realidad" según los expertos. Los efectos fijos por región, que controlan las diferencias entre economías desarrolladas, emergentes y en vías de desarrollo, contribuyen de forma muy poco pronunciada a la robustez del modelo.
+
+El siguiente paso es analizar qué ocurre con los coeficientes estandarizados, que como ya se ha mencionado permiten una comparación directa del impacto relativo de cada variable. Por aclarar, los coeficientes estandarizados representan el cambio en desviaciones estándar en la satisfacción con el sistema político por cada desviación estándar de cambio en las variables independientes.
+
+```{r, echo = FALSE}
+stargazer(beta1, beta2, beta3, 
+          coef = list(coef_estandarizados1, 
+                      coef_estandarizados2,
+                      coef_estandarizados3), 
+          type = "text",
+          title = "Resultados con Coeficientes Estandarizados",
+          dep.var.labels = c("Satisfacción con el funcionamiento del sistema"),
+          covariate.labels = c("Integridad electoral",
+                               "Percepciones de integridad electoral", 
+                               "Percepciones de malas prácticas electorales", 
+                               "Democracia", 
+                               "Integridad electoral:Democracia", 
+                               "Percepciones de integridad electoral:Democracia", 
+                               "Constante"),
+          omit.stat = c("f", "ser"))
+```
+
+<br>
+
+Al prestar atención al modelo 3, el que incluye las interacciones de la variable sobre la democracia, se pueden obtener conclusiones de gran interés. En este caso, la interacción entre integridad electoral y democracia es significativa (-0.739, p\<0.01) indicando que el efecto de la integridad electoral real sobre la satisfacción política varía sustancialmente según el contexto institucional. En regímenes no democráticos, un incremento de una desviación estándar en la integridad electoral se asocia con una disminución de 0.021 desviaciones estándar en la satisfacción política. Sin embargo, en democracias, este efecto es negativo y más pronunciado, resultando en un efecto total de -0.76 desviaciones estándar (-0.021 - 0.739). Esto nos puede estar indicando que los ciudadanos en democracias podrían tener expectativas más altas respecto a la integridad electoral.
+
+Esta vez el efecto de las percepciones de integridad electoral es positivo pero no significativo (0.604), mientras que la interacción con democracia (-1.143) indica una diferencia relevante pero no significativa. Por otro lado, las percepciones de malas prácticas electorales mantienen un efecto negativo y significativo (-0.589, p\<0.1), indicando que un incremento de una desviación estándar en la percepción de malas prácticas se asocia con una disminución de 0.589 desviaciones estándar en la satisfacción política. De nuevo, el modelo final explica un alto porcentaje de la varianza de la satisfacción con el funcionamiento del sistema político (54,8%). Además, tanto H1a como H1b vuelven a ser validadas sin problema, y en el caso de H1 la evidencia es mixta: aunque la relación entre variables es como se esperaba no existe significatividad estadística.
+
+```{r, echo = FALSE}
+interact_plot(
+  modelo3, 
+  pred = pei, 
+  modx = democracia, 
+  y.label = "Satisfacción con el funcionamiento del sistema", 
+  x.label = "Percepciones de integridad electoral", 
+  legend.main = NULL
+) +  
+  ggtitle("Interacción") +
+  theme(
+    plot.title = element_text(hjust = 0.5, color = "#000080"),  
+    axis.title.x = element_text(color = "#000080"),  
+    axis.title.y = element_text(color = "#000080"),  
+    plot.background = element_rect(fill = "white"),  
+    plot.margin = margin(10, 10, 10, 10), 
+    legend.title = element_blank()
+  ) +
+  coord_fixed(ratio = 0.5)
+
+```
+
+<br>
+
+El siguiente paso será analizar los modelos centrados en la segunda y la tercera hipótesis planteada.
+
+```{r, echo = FALSE}
+tabla2 <- export_summs(modelo5, modelo6,
+             model.names = c("Modelo 1", "Modelo 2"),
+             coefs = c("Percepciones de integridad electoral" = "pei",
+                               "PIB per cápita" = "pib", 
+                               "Índice de Desarrollo Humano" = "idh", 
+                               "Región económicamente emergente (cr: economía desarrollada)" = "regionEconomía emergente", 
+                               "Región económicamente en desarrollo (cr: economía desarrollada)" = "regionEn desarrollo", 
+                               "Democracia" = "democraciaDemocracia", 
+                               "Constante" = "(Intercept)"),            
+          out="models.txt")
+
+tabla2 <- set_caption(tabla2, "Participación electoral")
+
+print(tabla2)
+```
+
+<br>
+
+En el Modelo 1, que solo incluye las percepciones de integridad electoral, se muestra un efecto positivo e importante (15.20) aunque no estadísticamente significativo, y explica únicamente el 8% de la varianza en participación electoral. Este resultado inicial proporciona evidencia limitada para respaldar la Hipótesis 2, que defendía una relación positiva entre percepciones de integridad y participación. Al pasar a un modelo más completo como el segundo se mejora sustancialmente la varianza explicada, pasando ahora a un 35%. En este modelo, el efecto de las percepciones de integridad electoral se reduce drásticamente (0.06) y pierde importancia, dejando ver que la relación inicial observada podría estar mediada por otros factores. Entre estos parece destacar el Índice de Desarrollo Humano, que muestra un efecto positivo y basstante importante (74.55 puntos porcentuales por cada unidad de incremento en el índice), aunque no llega a ser significativo estadísticamente hablando. La variable democracia muestra un efecto positivo (6.96), por lo que los países democráticos tienen, en promedio, casi 7 puntos porcentuales más de participación que los no democráticos, manteniendo eso sí el resto de variables constantes.
+
+Los resultados no proporcionan evidencia robusta para respaldar H2, dado que el efecto de las percepciones de integridad electoral se diluye al introducir el resto de factores en el modelo completo. En cuanto a la tercera de las hipótesis, que sugería un mayor impacto de las percepciones en países no democráticos, el efecto positivo indica que existen diferencias sistemáticas en los niveles de participación entre regímenes democráticos y no democráticos. Las variable que clasifica los países en función de la región, con las economías desarrolladas como categoría de referencia, muestran que tanto las economías emergentes como las economías en desarrollo tienden a tener menor participación electoral (-4.06 y -6.04 puntos porcentuales respectivamente), aunque estos coeficientes no llegan nunca a ser significativos. Parece que la participación electoral quizá esté influenciada por factores estructurales y de desarrollo que por las percepciones ciudadanas sobre la integridad electoral.
+
+```{r, echo = FALSE}
+stargazer(beta5, beta6, 
+          coef = list(coef_estandarizados5, 
+                      coef_estandarizados6), 
+          type = "text",
+          title = "Resultados con Coeficientes Estandarizados",
+          dep.var.labels = c("Participación en las urnas"),
+          covariate.labels = c("Percepciones de integridad electoral",
+                               "PIB per cápita", 
+                               "Índice de Desarrollo Humano", 
+                               "Región económicamente emergente (cr: economía desarrollada)", 
+                               "Región económicamente en desarrollo (cr: economía desarrollada)", 
+                               "Democracia", 
+                               "Constante"),
+          omit.stat = c("f", "ser"))
+```
+
+<br>
+
+En este caso, los coeficientes estandarizados muestran que el PIB per cápita tiene un efecto negativo y estadísticamente significativo (-0.178, p \< 0.001), mientras que las demás variables, incluida la percepción de integridad electoral, no tienen significatividad en ninguno de los modelos. Esto confirma que el PIB per cápita, aunque con un efecto débil, es el único predictor significativo en el modelo. Por otro lado, la percepción de integridad electoral, el índice de desarrollo humano, las categorías regionales y la democracia no explican cambios significativos en la participación electoral. En comparación con la tabla de coeficientes normales, la tabla de coeficientes estandarizados no aporta información sustancialmente diferente. Ambos análisis apuntan hacia la misma conclusión: la percepción de integridad electoral no tiene un efecto significativo sobre la participación electoral, como sí afirmaba la segunda de las hipótesis planteada.
+
+<br>
+
+# Conclusiones
+
+A pesar de ser un elemento crucial para el correcto funcionamiento del sistema, la integridad de los procesos electorales per se no otorga información demasiado profunda acerca de la formación de las actitudes políticas de los votantes. Sin embargo, las percepciones de los ciudadanos sobre la honestidad de las elecciones esclarecen el desarrollo y los cambios en estas para con el sistema político. El impacto en la satisfacción con el funcionamiento del sistema que tiene la integridad percibida es mucho mayor que el impacto que tiene la integridad efectiva. Esto quiere decir que contar con ciudadanos satisfechos con los procesos electorales es saludable para la calidad democrática: el efecto de las percepciones construidas frente a la integridad efectiva es innegable. Además, este hecho no se limita únicamente a la percepción ciudadana sobre la integridad electoral, sino también a la percepción de las malas prácticas electorales. Teniendo en cuenta los aspectos negativos de los procesos electorales, aquellos países con peores percepciones de la honestidad de los comicios cuentan con menores niveles de satisfacción con el funcionamiento del sistema. De esta manera, se pueden confirmar las Hipótesis 1, 1a y 1b. 
+
+La Hipótesis 2 del presente trabajo de investigación sugería que aquellos países que cuenten con mejores percepciones de integridad electoral presentarán una mayor presencia ciudadana en las urnas. En un análisis preliminar podría parecer que la hipótesis se confirmaba, ya que un incremento de una unidad en los niveles de percepción de integridad electoral suponía un incremento de 15 puntos porcentuales en la participación electoral del país. Sin embargo, al añadir más variables al modelo, tanto independientes como de control, este coeficiente se reduce y pasa a ser prácticamente 0, cargando con todo el peso explicativo del modelo la variable que mide el Índice de Desarrollo Humano de cada país. No pudiendo confirmar, entonces, la Hipótesis 2, se puede concluir que este apartado del estudio necesita investigación adicional. Sin embargo, esto queda fuera del alcance de nuestro análisis. Aún así, este hecho pone de manifiesto una de las principales limitaciones del proyecto de investigación: usar una muestra tan limitada. Tratar de establecer relaciones causales entre variables utilizando 49 observaciones es, cuanto menos, problemático, por lo que las conclusiones obtenidas a través del análisis han de ser entendidas con cautela, siendo conscientes de este hecho. 
+
+Por último, en lo que respecta a la Hipótesis 3, cabe destacar que el impacto de las percepciones sobre integridad electoral es mayor en aquellos sistemas no democráticos que en los que sí lo son. Esto se puede deber a la experiencia dentro de cada país: en un sistema democrático los ciudadanos tenderán a exigir más que honestidad y justicia, por lo que no se conformarán únicamente con sus propias percepciones sobre la integridad del proceso electoral para construir sus actitudes políticas. Por ello, en aquellos países que no caen dentro de la categoría de democráticos el impacto de las percepciones ciudadanas en la satisfacción con el funcionamiento del sistema es mayor. Cabe destacar que el punto de partida de satisfacción con el funcionamiento del sistema es mayor en las democracias, por lo que este grupo de países contará siempre con mejores valoraciones ciudadanas. Teniendo todo esto en consideración, se expone otra de las limitaciones del proyecto de investigación: la endogeneidad. Es complicado saber hasta qué punto las percepciones ciudadanas sobre la integridad de los procesos electorales tienen un impacto en su satisfacción con el funcionamiento del sistema o, si por otro lado, es la previa satisfacción ciudadana con el funcionamiento del sistema la que da forma a la percepción electoral ciudadana. 
+
+<br>
+
+<br>
+
+<br>
+
+# Referencias
