@@ -1,0 +1,298 @@
+---
+title: "Variables explicatorias de la tasa de suicidio"
+subtitle: "Trabajo final talleres de análisis político"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+library(pacman)
+# Instalamos las librerías necesarias
+p_load(readr, dplyr, tidyr,
+       zoo, rjson, purr,
+       countrycode, estimatr,
+       jtools, ggplot2, forcats)
+
+```
+
+## Introducción
+
+Este es el archivo HTML con el código fuente para el trabajo final de talleres. Nuestro trabajo usa las bases de datos de Quality of Government (QoG) y del Programa de Datos sobre Conflictos de Uppsala (UCDP). Este trabajo trata de buscar variables que puedan estar correlacionadas y predecir la tasa de suicidio (variable dependiente).
+
+Todos los comentarios a partir de esta introducción se encuentran dentro de los bloques de código, dada la brevedad de los mismos, pero también porque así permite una mayor legibilidad del códgio y resulta más fácil de explicar. Este documento necesariamente va unido al texto completo del trabajo final, donde se entra en mucho más detalle en la metodología y la gestión de los datos que en este HTML.
+
+## Lectura de datos
+
+```{r Lectura de la base de datos}
+# Leemos la base de datos de Quality of Government completa, formato panel
+qog <- read_csv("qog_std_ts_jan24.csv")
+
+# Leemos la base de datos del Programa de Datos sobre Conflictos de Uppsala (UCDP)
+ucdp <- readRDS("ged241.rds")
+```
+
+## Quality of Government
+
+```{r Variables QOG}
+# Seleccionamos las variables de interés de la QOG
+qog_sub <- qog |>
+  select(ccode, # Código numérico de país
+         cname, # Nombre del país
+         year, # Año de los datos
+         suicide = who_suit, # Tasa de suicidio (Variable dependiente)
+         ethnic_fra = fe_etfra, # Fragmentación étnica
+         life_exp = who_let, # Esperanza de vida
+         rural_pop = wdi_poprul, # Proporción de población rural
+         hci = pwt_hci, # Índice de Capital Humano
+         employment = wdi_empprne, # Tasa de empleo
+         gdp = wdi_gdpcappppcon2017, # PIBpc a PPA ($ 2017)
+         below_median = wdi_belmedinc, # % de población por debajo del salario mediano
+         top1 = top_top1_income_share, # Proporción de los ingresos en el 1% más rico
+         democracy = bmr_dem # Variable dicotómica (Democracia - no democracia)
+  )
+```
+
+```{r NAs QOG}
+# Eliminamos aquellos países que no tiene datos para ningún año de alguna de las variables
+variables <- colnames(qog_sub)[4:length(colnames(qog_sub))]
+
+for(var in variables) { # Para cada variable
+  qog_sub <- qog_sub |> 
+    group_by(ccode) |>  # Agrupado por país
+    filter(!all(is.na(!!sym(var)))) |> # Eliminamos los países que tienen NA para todos los años en alguna variable
+    ungroup()
+}
+
+# Número de países con datos
+paises <- length(unique(qog_sub$ccode))
+print(paste("En la base de datos final hay disponibles", paises, "países."))
+
+# Imputamos los datos perdidos de la base de datos aprovehcando el formato panel
+for (var in variables) {
+  qog_sub <- qog_sub |> 
+    group_by(ccode) |> # Agrupamos por país
+    arrange(ccode, year) |> # Ordenamos por país y año
+    mutate(!!sym(var) := na.approx(.data[[var]], na.rm = TRUE, rule = 2)) #Imputamos y extrapolamos
+}
+```
+## UCDP
+
+```{r Variables UCDP}
+# Seleccionamos las variables de interés en la base de datos de la UCDP
+ucdp_sub <- ucdp |> 
+  select(id, year, type_of_violence, country_id, best)
+
+# Creamos la variable 'ccode' con el código de país a ISO-3166
+ucdp_sub$ccode <- countrycode(ucdp_sub$country_id, "gwn", "iso3n", warn = T)
+ucdp_sub <-  ucdp_sub |> select(-country_id)
+
+# Filtramos para los años del estudio (2015 - 2019)
+ucdp_sub <- ucdp_sub |> filter(year %in% 2015:2019)
+
+# Calculamos los datos agregados de estos 5 años
+ucdp_agg <- ucdp_sub |> group_by(ccode) |> summarise(conflict_n = n(), # Número de conflictos
+                                                 deaths = sum(best), # Número de muertes
+                                                 state = sum(type_of_violence == 1), # Violencia estatal
+                                                 non_state = sum(type_of_violence == 2)) # Violencia no estatal
+# Eliminamos casos perdidos
+ucdp_agg <- ucdp_agg |> drop_na()
+
+# Número de países con datos
+paises <- length(unique(ucdp_agg$ccode))
+print(paste("En la base de datos final hay registros para", paises, "países."))
+```
+
+## Variable lag
+
+```{r Variable lag}
+# Creamos variable lag a partir de los datos panel de QoG, centrándonos en el PIB
+lag_var <- qog_sub |> 
+  filter(year >= 1996) |> # Sólo para 1996 hasta 2019
+  mutate(year5 = factor(case_when(year < 2000 ~ "95s", # Lustro 1996 - 1999
+                                  year < 2005 ~ "00s", # Lustro 2000 - 2004
+                                  year < 2010 ~ "05s", # Lustro 2005 - 2009
+                                  year < 2015 ~ "10s", # Lustro 2010 - 2014
+                                  year < 2020 ~ "15s", # Lustro 2015 - 2019
+                                  T ~ NA))) |> # Eliminamos años posteriores
+  mutate(year5 = fct_relevel(year5, c("00s", "05s", "10s", "15"))) |> # Recodificamos
+  group_by(ccode, year5) |> # Agrupamos por país y lustro (unidad de observación)
+  summarise(gdp_lag = mean(gdp, na.rm = T)) |> # Computamos la media del lustro
+  drop_na()
+
+# Pasamos a ancho
+lag_var_w <- lag_var |> 
+  pivot_wider(names_from = "year5",
+              names_prefix = "gdp_",
+              values_from = "gdp_lag")
+
+# Con los datos panel, seleccionamos el PIB de 2015
+# Filtramos QOG para el año de estudio - 4 (2015) para la variable lag
+qog_2015 <- qog_sub |> filter(year == 2015) |>
+  select(ccode, gdp) |> # Seleccionamos el PIBpc como variable lag
+  rename(gdp2015 = gdp) # Renombramos para evitar duplicidad
+```
+
+
+## Unión de QOG y UCDP
+
+```{r Unión de bases de datos}
+# Filtramos QOG para el año de estudio (2019)
+qog_2019 <- qog_sub |> filter(year == 2019)
+
+# Juntamos la base de datos usando 'ccode'
+data <- qog_2019 |> left_join(ucdp_agg, by = "ccode") |> # Primero con la base de datos de UCDP
+  left_join(qog_2015, by = "ccode") # Y luego para añadir el PIBpc en 2015
+
+# Recodificamos algunas de las variables de la base de datos final
+data <- data |> 
+  mutate(state = state / conflict_n, # Proporción de violencia estatal sobre el total
+         non_state = non_state / conflict_n, # Proporción de violencia no estatal sobre el total
+         deaths = deaths / (conflict_n), # Muertes por conflicto en vez de muertes totales
+         gdp = log(gdp), # Transformamos PIB en su logaritmo
+         region = countrycode(ccode, "iso3n", "region")) # Añadimos una variable que divide los países en 7 regiones
+
+data <- data |> 
+  mutate(across(c(conflict_n:non_state), ~ replace_na(., 0))) |> # Cambiamos NAs por 0 en UCDP
+  select(-conflict_n) # Eliminamos variables que ya no son necesarias
+```
+
+## Tablas descriptivas
+
+```{r Tablas descriptivas}
+# Creamos un summary de las variables
+descriptive <- data[4:16] |> summary() |> as.data.frame() 
+
+# Separamos la categoría del valor
+descriptive <- descriptive |> separate(Freq, into = c("Cat", "Val"), sep = ":")
+
+# Transformamos a ancho para una mejor visualización
+descriptive_w <- descriptive |> pivot_wider(names_from = Cat, values_from = Val) |> 
+  select(-Var1) |> # Eliminamos la variable vacía
+  rename(Variable = Var2)
+
+descriptive_w
+```
+
+## Modelos de regresión
+
+```{r Modelos de regresión}
+# De manera exploratoria, creamos un modelo de regresión simple
+modelo0 <- lm(suicide ~ hci, data = data)
+summary(modelo0)
+
+# Creamos un primer modelo, únicamente con variables sociales y efectos fijos por región
+modelo1 <- lm_robust(suicide ~ life_exp + rural_pop + hci, fixed_effects = region, data = data)
+summary(modelo1)
+
+# Creamos un segundo modelo, donde añadimos también variables económicas y políticas
+modelo2 <- lm_robust(suicide ~ life_exp + rural_pop + hci +
+                       employment + gdp + gdp2015 + below_median + top1 + democracy,
+                     fixed_effects = region, data = data)
+summary(modelo2)
+
+# Creamos un tercer y último modelo, donde añadimos las variables sobre conflictos 
+# y miramos la interacción entre PIB y desigualdad
+modelo3 <- lm_robust(suicide ~ . + gdp * below_median - region, 
+                     fixed_effects = region, data = data[4:18])
+summary(modelo3)
+```
+## Validación de los modelos
+
+```{r}
+# Creamos una función para poder calcular AIC con un modelo de lm_robust
+AIC <- function(modelo, response){ # Con los argumentos modelo y la variable dependiente
+  fitted_values <- modelo$fitted.values # Vemos los valores predichos
+  residuals <- response - fitted_values # Calculamos los residuos
+  rss <- sum(residuals^2) # Calculamos la suma de residuos cuadrados 
+  n <- modelo$nobs # Calculamos el número de observaciones
+  k <- modelo$k # Calculamos el número de variables independientes
+  aic <- n * log(rss / n) + 2 * k # Calculamos el índice AIC
+  aic
+}
+
+# Creamos una función para poder calcular BIC con un modelo de lm_robust
+BIC <- function(modelo, response){ # Con los argumentos modelo y la variable dependiente
+  fitted_values <- modelo$fitted.values # Vemos los valores predichos
+  residuals <- response - fitted_values # Calculamos los residuos
+  rss <- sum(residuals^2) # Calculamos la suma de residuos cuadrados
+  n <- modelo$nobs #Calculamos el número de observaciones
+  k <- modelo$k # Calculamos el número de variables independientes
+  bic <- n * log(rss / n) + k * log(n) # Calculamos el índice BIC
+  bic
+}
+
+# Calculamos AIC para los tres modelos
+AIC(modelo1, data$suicide)
+AIC(modelo2, data$suicide)
+AIC(modelo3, data$suicide)
+
+# Calculamos BIC para los tres modelos
+BIC(modelo1, data$suicide)
+BIC(modelo2, data$suicide)
+BIC(modelo3, data$suicide)
+```
+
+```{r Multicolinealidad}
+# Miramos si las variables tienen problemas de multicolinealidad (VIF >= 5)
+modelo_vif <- lm(suicide ~ ., data = data[4:17])
+car::vif(modelo_vif)
+```
+
+## Presentación de resultados
+
+```{r Tabla modelos}
+# Creamos una tabla para comparar los tres modelos
+export_summs(modelo1, modelo2, modelo3)
+```
+
+```{r coeficientes estandarizados}
+# Estandarizamos los datos para poder mirar los coeficientes
+data_standardized <- data
+data_standardized[4:17] <- scale(data_standardized[4:17])
+
+# Computamos nuevamente el modelo 3 con los nuevos datos
+modelo3_std <- lm_robust(suicide ~ . + gdp2015 * below_median - region, fixed_effects = region, data = data_standardized[4:18])
+
+# Extraemos los coeficientes estandarizados
+std_coeff <- coef(modelo3_std)
+print(std_coeff)
+```
+
+
+```{r Gráficos modelos}
+# Creamos un summary para cada modelo
+summary1 <- tidy(modelo1, conf.int = TRUE)
+summary2 <- tidy(modelo2, conf.int = TRUE)
+summary3 <- tidy(modelo3, conf.int = TRUE)
+
+# Visualizamos gráficamente el primer modelo
+graph_m1 <- ggplot(summary1, aes(x = estimate, y = term, xmin = conf.low, xmax = conf.high)) +
+  geom_point() +
+  geom_errorbarh(height = 0.2) +
+  geom_vline(xintercept = 0) +
+  theme_minimal() +
+  labs(x = "Coeficiente", y = "Variables",
+       title = "Coeficientes con intervalo de confianza del 95% para el modelo 1")
+graph_m1
+
+# Visualizamos gráficamente el segundo modelo
+graph_m2 <- ggplot(summary2, aes(x = estimate, y = term, xmin = conf.low, xmax = conf.high)) +
+  geom_point() +
+  geom_errorbarh(height = 0.2) +
+  geom_vline(xintercept = 0) +
+  theme_minimal() +
+  labs(x = "Coeficiente", y = "Variables",
+       title = "Coeficientes con intervalo de confianza del 95% para el modelo 2")
+graph_m2
+
+# Visualizamos gráficamente el tercer modelo
+graph_m3 <- ggplot(summary3, aes(x = estimate, y = term, xmin = conf.low, xmax = conf.high)) +
+  geom_point() +
+  geom_errorbarh(height = 0.2) +
+  geom_vline(xintercept = 0) +
+  theme_minimal() +
+  labs(x = "Coeficiente", y = "Variables",
+       title = "Coeficientes con intervalo de confianza del 95% para el modelo 3")
+graph_m3
+```
+
